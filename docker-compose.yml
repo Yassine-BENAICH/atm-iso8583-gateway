@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # The ISO 8583 Gateway Service
+  gateway-app:
+    build: .
+    container_name: iso8583-gateway-app
+    ports:
+      - "8080:8080"
+    environment:
+      - ISO8583_HOST=mock-switch  # Point to the switch service below
+      - ISO8583_PORT=9000
+    depends_on:
+      - mock-switch
+    networks:
+      - atm-net
+
+  # The Simulated Payment Switch (Mock Switch)
+  mock-switch:
+    build: .
+    container_name: iso8583-mock-switch
+    ports:
+      - "9000:9000"
+    command: ["java", "-cp", "app.jar", "com.atm.iso8583.simulator.Iso8583MockSwitch", "9000"]
+    networks:
+      - atm-net
+
+networks:
+  atm-net:
+    driver: bridge

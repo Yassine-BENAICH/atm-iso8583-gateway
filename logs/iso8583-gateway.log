@@ -274,3 +274,12 @@ java.net.ConnectException: Connection refused: getsockopt
 2026-03-02T11:14:46.169Z DEBUG 536116 --- [ATM ISO8583 Gateway] [http-nio-8080-exec-10] com.atm.iso8583.network.Iso8583Channel   : Received 65 bytes from switch
 2026-03-02T11:14:46.169Z DEBUG 536116 --- [ATM ISO8583 Gateway] [http-nio-8080-exec-10] com.atm.iso8583.codec.Iso8583Codec       : Converting ISOMsg to JSON | MTI=0810
 2026-03-02T11:14:46.169Z  INFO 536116 --- [ATM ISO8583 Gateway] [http-nio-8080-exec-10] c.a.i.service.Iso8583GatewayService      : Request completed | MTI=0810 RC=00 elapsed=60ms
+2026-03-02T11:21:40.482Z  INFO 536116 --- [ATM ISO8583 Gateway] [http-nio-8080-exec-1] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 3829 ms
+2026-03-02T11:22:55.810Z  INFO 536116 --- [ATM ISO8583 Gateway] [http-nio-8080-exec-8] c.a.i.service.Iso8583GatewayService      : Processing request | MTI=0100 STAN=000001
+2026-03-02T11:22:55.812Z DEBUG 536116 --- [ATM ISO8583 Gateway] [http-nio-8080-exec-8] com.atm.iso8583.codec.Iso8583Codec       : Converting JSON to ISOMsg | MTI=0100
+2026-03-02T11:22:55.892Z  INFO 536116 --- [ATM ISO8583 Gateway] [http-nio-8080-exec-8] c.a.i.service.Iso8583GatewayService      : Packed ISO 8583 message | 181 bytes
+2026-03-02T11:22:55.913Z  INFO 536116 --- [ATM ISO8583 Gateway] [http-nio-8080-exec-8] com.atm.iso8583.network.Iso8583Channel   : Connecting to switch 127.0.0.1:9000
+2026-03-02T11:22:56.028Z DEBUG 536116 --- [ATM ISO8583 Gateway] [http-nio-8080-exec-8] com.atm.iso8583.network.Iso8583Channel   : Sent 181 bytes to switch
+2026-03-02T11:22:59.457Z DEBUG 536116 --- [ATM ISO8583 Gateway] [http-nio-8080-exec-8] com.atm.iso8583.network.Iso8583Channel   : Received 189 bytes from switch
+2026-03-02T11:22:59.459Z DEBUG 536116 --- [ATM ISO8583 Gateway] [http-nio-8080-exec-8] com.atm.iso8583.codec.Iso8583Codec       : Converting ISOMsg to JSON | MTI=0110
+2026-03-02T11:22:59.488Z  INFO 536116 --- [ATM ISO8583 Gateway] [http-nio-8080-exec-8] c.a.i.service.Iso8583GatewayService      : Request completed | MTI=0110 RC=00 elapsed=3679ms

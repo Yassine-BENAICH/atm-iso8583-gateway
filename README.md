@@ -78,7 +78,7 @@ graph LR
 
 *   JDK 17 or higher
 *   Maven 3.8+
-*   Docker (Optional, for containerized deployment)
+*   Docker 
 
 ### Local Development
 
@@ -137,3 +137,4 @@ For detailed information, please refer to the following guides:
 ## ⚖ License
 
 This project is licensed under the MIT License.
+

@@ -2,6 +2,13 @@
 
 The ISO 8583 Gateway exposes a RESTful interface to perform traditional financial transactions via modern JSON objects.
 
+## Postman
+
+Ready-to-import Postman assets are available in `docs/postman`:
+
+- `docs/postman/ATM_ISO8583.postman_collection.json`
+- `docs/postman/ATM_ISO8583.local.postman_environment.json`
+
 ## 🔗 Endpoint Summary
 
 | Endpoint | Method | MTI Mode | Description |

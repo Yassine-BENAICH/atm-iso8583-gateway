@@ -1,0 +1,345 @@
+{
+  "info": {
+    "_postman_id": "6c56b0ee-36e1-4fd0-a8f3-0f67c2b4863e",
+    "name": "ATM ISO 8583 Gateway",
+    "description": "Postman collection for ATM ISO 8583 Gateway REST API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "function pad2(v) { return String(v).padStart(2, '0'); }",
+          "function utcMMDDHHMMSS(date) {",
+          "  return pad2(date.getUTCMonth() + 1) +",
+          "         pad2(date.getUTCDate()) +",
+          "         pad2(date.getUTCHours()) +",
+          "         pad2(date.getUTCMinutes()) +",
+          "         pad2(date.getUTCSeconds());",
+          "}",
+          "function localHHMMSS(date) {",
+          "  return pad2(date.getHours()) +",
+          "         pad2(date.getMinutes()) +",
+          "         pad2(date.getSeconds());",
+          "}",
+          "function localMMDD(date) {",
+          "  return pad2(date.getMonth() + 1) + pad2(date.getDate());",
+          "}",
+          "const now = new Date();",
+          "const stan = String(Math.floor(Math.random() * 1000000)).padStart(6, '0');",
+          "const rrn = String(Date.now()).slice(-12);",
+          "pm.collectionVariables.set('stan', stan);",
+          "pm.collectionVariables.set('transmissionDateTime', utcMMDDHHMMSS(now));",
+          "pm.collectionVariables.set('localTime', localHHMMSS(now));",
+          "pm.collectionVariables.set('localDate', localMMDD(now));",
+          "pm.collectionVariables.set('rrn', rrn);"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "stan",
+      "value": "000001"
+    },
+    {
+      "key": "transmissionDateTime",
+      "value": "0101000000"
+    },
+    {
+      "key": "localTime",
+      "value": "000000"
+    },
+    {
+      "key": "localDate",
+      "value": "0101"
+    },
+    {
+      "key": "rrn",
+      "value": "123456789012"
+    }
+  ],
+  "item": [
+    {
+      "name": "Gateway Config",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "const body = pm.response.json();",
+              "pm.test('contains host and port', function () {",
+              "  pm.expect(body).to.have.property('host');",
+              "  pm.expect(body).to.have.property('port');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/iso8583/config",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "iso8583",
+            "config"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Echo (0800)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "const body = pm.response.json();",
+              "pm.test('response has status field', function () {",
+              "  pm.expect(body).to.have.property('status');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/iso8583/echo",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "iso8583",
+            "echo"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Authorize (0100/0110)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP is 200/503/504', function () {",
+              "  pm.expect([200, 503, 504]).to.include(pm.response.code);",
+              "});",
+              "const body = pm.response.json();",
+              "pm.test('response has status', function () {",
+              "  pm.expect(body).to.have.property('status');",
+              "});",
+              "if (body.stan) pm.environment.set('lastStan', body.stan);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"mti\": \"0100\",\n  \"pan\": \"{{pan}}\",\n  \"processingCode\": \"000000\",\n  \"amount\": \"000000010000\",\n  \"transmissionDateTime\": \"{{transmissionDateTime}}\",\n  \"stan\": \"{{stan}}\",\n  \"localTime\": \"{{localTime}}\",\n  \"localDate\": \"{{localDate}}\",\n  \"expirationDate\": \"2712\",\n  \"merchantCategoryCode\": \"6011\",\n  \"posEntryMode\": \"021\",\n  \"posConditionCode\": \"00\",\n  \"acquiringInstitutionId\": \"{{institutionId}}\",\n  \"retrievalReferenceNumber\": \"{{rrn}}\",\n  \"terminalId\": \"{{terminalId}}\",\n  \"merchantId\": \"{{merchantId}}\",\n  \"cardAcceptorNameLocation\": \"ATM BRANCH 01       PARIS      FR\",\n  \"currencyCode\": \"{{currencyCode}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/iso8583/authorize",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "iso8583",
+            "authorize"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Financial (0200/0210)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP is 200/503/504', function () {",
+              "  pm.expect([200, 503, 504]).to.include(pm.response.code);",
+              "});",
+              "const body = pm.response.json();",
+              "pm.test('response has status', function () {",
+              "  pm.expect(body).to.have.property('status');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"mti\": \"0200\",\n  \"pan\": \"{{pan}}\",\n  \"processingCode\": \"010000\",\n  \"amount\": \"000000005000\",\n  \"transmissionDateTime\": \"{{transmissionDateTime}}\",\n  \"stan\": \"{{stan}}\",\n  \"localTime\": \"{{localTime}}\",\n  \"localDate\": \"{{localDate}}\",\n  \"expirationDate\": \"2712\",\n  \"merchantCategoryCode\": \"6011\",\n  \"posEntryMode\": \"021\",\n  \"posConditionCode\": \"00\",\n  \"acquiringInstitutionId\": \"{{institutionId}}\",\n  \"retrievalReferenceNumber\": \"{{rrn}}\",\n  \"terminalId\": \"{{terminalId}}\",\n  \"merchantId\": \"{{merchantId}}\",\n  \"currencyCode\": \"{{currencyCode}}\",\n  \"pinData\": \"1234567890ABCDEF\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/iso8583/financial",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "iso8583",
+            "financial"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Reversal (0400/0410)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP is 200/503/504', function () {",
+              "  pm.expect([200, 503, 504]).to.include(pm.response.code);",
+              "});",
+              "const body = pm.response.json();",
+              "pm.test('response has status', function () {",
+              "  pm.expect(body).to.have.property('status');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"mti\": \"0400\",\n  \"pan\": \"{{pan}}\",\n  \"processingCode\": \"000000\",\n  \"amount\": \"000000010000\",\n  \"transmissionDateTime\": \"{{transmissionDateTime}}\",\n  \"stan\": \"{{stan}}\",\n  \"localTime\": \"{{localTime}}\",\n  \"localDate\": \"{{localDate}}\",\n  \"acquiringInstitutionId\": \"{{institutionId}}\",\n  \"retrievalReferenceNumber\": \"{{rrn}}\",\n  \"terminalId\": \"{{terminalId}}\",\n  \"merchantId\": \"{{merchantId}}\",\n  \"currencyCode\": \"{{currencyCode}}\",\n  \"originalDataElements\": \"01000000012345600000010000301020500\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/iso8583/reversal",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "iso8583",
+            "reversal"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Generic Send (custom MTI)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP is 200/503/504', function () {",
+              "  pm.expect([200, 503, 504]).to.include(pm.response.code);",
+              "});",
+              "const body = pm.response.json();",
+              "pm.test('response has status', function () {",
+              "  pm.expect(body).to.have.property('status');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"mti\": \"0800\",\n  \"stan\": \"{{stan}}\",\n  \"transmissionDateTime\": \"{{transmissionDateTime}}\",\n  \"acquiringInstitutionId\": \"{{institutionId}}\",\n  \"networkManagementCode\": \"301\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/iso8583/send",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "iso8583",
+            "send"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Health",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/actuator/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "actuator",
+            "health"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

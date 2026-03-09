@@ -2,7 +2,7 @@
 
 The ISO 8583 Gateway app can be configured using the `application.yml` file or standard Spring environment variables.
 
-## ⚙ Network Configuration
+## Network Configuration
 
 The network configuration determines how the gateway connects to the target host (Bank Switch or Mock Switch).
 
@@ -15,14 +15,14 @@ The network configuration determines how the gateway connects to the target host
 | `iso8583.header-length` | `4` | Number of bytes used as the length prefix. |
 | `iso8583.institution-id` | `000001` | The acquiring institution ID sent in messages. |
 
-## 📦 Packager Configuration
+## Packager Configuration
 
 The gateway uses an XML-based jPOS packager configuration.
 
 *   **File Location**: `src/main/resources/packager/custom_iso87.xml`
 *   **Purpose**: Defines the length and data type of each ISO 8583 field (e.g., LLLVAR, NUMERIC, etc.).
 
-## 🖥 Environment Overrides
+## Environment Overrides
 
 You can override any configuration property via environment variables when running the application.
 
@@ -35,7 +35,7 @@ mvn spring-boot:run
 
 ---
 
-## 📈 Logging
+## Logging
 
 By default, the application logs critical events and transaction summaries.
 

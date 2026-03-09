@@ -2,30 +2,30 @@
 
 The ISO 8583 Gateway project includes a built-in **Mock Switch** to simulate a real-world financial transaction host.
 
-## 🕹 Mock Switch Overview
+## Mock Switch Overview
 
 The Mock Switch is a simple TCP server that listens for ISO 8583 messages and responds based on the MTI and processing code.
 
-### ✨ Features
+### Features
 *   **0800 (Network management)**: Echoes back the STAN and NMC 301.
 *   **0100 (Authorization)**: Approves any transaction (Response Code 00).
 *   **0200 (Financial)**: Approves any financial transaction (Response Code 00).
 *   **MTI Header Handling**: Automatically adds the 4-byte length header required by some legacy systems.
 
-### ⚙ Processing Logic
+### Processing Logic
 
 The Mock Switch evaluates incoming messages using the following decision flow:
 
 ```mermaid
 flowchart TD
     Start([Receive ISOMsg]) --> Parse[Parse MTI]
-    Parse --> RequestType{MTI Type?}
+    Parse --> RequestType{MTI Type}
     
     RequestType -- 0800 --> Network[Network Mgmt]
     RequestType -- 0100/0200 --> Financial[Financial Trans]
     RequestType -- Other --> Unknown[Respond w/ Error]
     
-    Network --> NMC{NMC = 301?}
+    Network --> NMC{NMC = 301}
     NMC -- Yes --> Echo[Set Response MTI 0810<br/>Set RC 00]
     NMC -- No --> Error[Set RC 05]
     
@@ -39,7 +39,7 @@ flowchart TD
 
 ---
 
-## 🚀 How to Run the Mock Switch
+## How to Run the Mock Switch
 
 You can start the Mock Switch independently using Maven:
 
@@ -83,7 +83,7 @@ Once both the **Gateway Application** and the **Mock Switch** are running, you c
 
 ---
 
-## 🛠 Customizing the Mock Switch
+## Customizing the Mock Switch
 
 The logic for handling messages is located in:
 `src/test/java/com/atm/iso8583/simulator/Iso8583MockSwitch.java`

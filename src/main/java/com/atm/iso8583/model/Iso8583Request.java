@@ -13,10 +13,7 @@ import lombok.Builder;
 
 import java.util.Map;
 
-/**
- * Generic ISO 8583 request model (JSON ↔ ISO 8583).
- * Each field corresponds to an ISO 8583 data element.
- */
+
 @Data
 @Builder
 @NoArgsConstructor

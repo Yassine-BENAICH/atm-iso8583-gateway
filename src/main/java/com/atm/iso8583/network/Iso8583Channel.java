@@ -11,18 +11,6 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
-/**
- * Low-level TCP channel for ISO 8583 message exchange.
- *
- * <p>
- * Protocol framing: a fixed-length header (default 4 bytes, big-endian)
- * contains the payload length, followed by the raw ISO 8583 bytes.
- *
- * <p>
- * <b>Note:</b> The current implementation opens a fresh TCP connection per
- * transaction. For production use with high throughput, replace this with a
- * persistent channel (e.g. jPOS {@code QMUX} / {@code ChannelAdaptor}).
- */
 @Component
 public class Iso8583Channel {
 

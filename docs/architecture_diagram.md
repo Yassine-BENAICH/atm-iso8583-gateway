@@ -34,7 +34,7 @@ graph TB
     style Service fill:#d4fc79,stroke:#96e6a1,stroke-width:4px
 ```
 
-## 🔐 Security Layer (Conceptual)
+## Security Layer (Conceptual)
 
 While not implemented in this demo, a production gateway should include:
 

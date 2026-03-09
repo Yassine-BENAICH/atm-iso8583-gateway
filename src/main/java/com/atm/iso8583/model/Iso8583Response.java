@@ -11,11 +11,6 @@ import lombok.Builder;
 import java.time.Instant;
 import java.util.Map;
 
-/**
- * ISO 8583 response model returned to the REST client (JSON).
- * Contains response-specific fields in addition to echo fields from the
- * request.
- */
 @Data
 @Builder
 @NoArgsConstructor

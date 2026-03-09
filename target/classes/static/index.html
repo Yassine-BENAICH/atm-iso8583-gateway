@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress ALL -->
 <html lang="en">
 
 <head>
@@ -74,7 +75,7 @@
                     <div class="input-group">
                         <div class="form-field">
                             <label>Request Template</label>
-                            <select id="template-select">
+                            <label for="template-select"></label><select id="template-select">
                                 <option value="0800">Network Echo (0800)</option>
                                 <option value="0100">Authorization Request (0100)</option>
                                 <option value="0200">Financial Request (0200)</option>
@@ -83,13 +84,13 @@
                         </div>
                         <div class="form-field">
                             <label>JSON Payload</label>
-                            <textarea id="json-input" placeholder='{"mti": "0800", ...}'></textarea>
+                            <label for="json-input"></label><textarea id="json-input" placeholder='{"mti": "0800", ...}'></textarea>
                         </div>
                         <button id="send-btn" class="btn btn-primary">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
                                 <line x1="22" y1="2" x2="11" y2="13">
-                                    </polyline>
+                                    </line>
                                     <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                             </svg>
                             Transmit Message

@@ -2,7 +2,7 @@
 
 The ISO 8583 Gateway follows a clean layered architecture, abstracting the complexities of low-level TCP/IP and binary message packaging away from the RESTful API.
 
-## 🧱 Component Overview
+## Component Overview
 
 The main components are:
 *   **Controller**: Exposes RESTful endpoints and handles request body validation.
@@ -13,7 +13,7 @@ The main components are:
 
 ---
 
-## 🧬 Class Diagram
+## Class Diagram
 
 Below is a simplified view of the internal class structure.
 
@@ -73,7 +73,7 @@ classDiagram
 
 ---
 
-## 🔄 Sequence Diagram: Request Flow
+## Sequence Diagram: Request Flow
 
 The following diagram illustrates a full request/response cycle:
 
@@ -104,7 +104,7 @@ sequenceDiagram
 
 ---
 
-## 🛠 Data Mapping
+## Data Mapping
 
 Fields are mapped according to the **ISO 8583:1987** specification. The mapping rules are defined in the `Iso8583Codec` class and the `src/main/resources/packager/custom_iso87.xml` file.
 

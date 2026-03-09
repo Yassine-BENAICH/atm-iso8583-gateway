@@ -2,6 +2,7 @@ com\atm\iso8583\codec\Iso8583Codec.class
 com\atm\iso8583\config\Iso8583Config.class
 com\atm\iso8583\model\ApiError.class
 com\atm\iso8583\service\Iso8583GatewayService.class
+com\atm\iso8583\simulator\Iso8583MockSwitch.class
 com\atm\iso8583\model\Iso8583Request$Iso8583RequestBuilder.class
 com\atm\iso8583\model\Iso8583Response.class
 com\atm\iso8583\controller\Iso8583GatewayController.class

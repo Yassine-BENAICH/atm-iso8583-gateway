@@ -114,7 +114,7 @@ header {
     align-items: center;
     gap: 0.6rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
 }
 
 /* Specific Card Sizes */

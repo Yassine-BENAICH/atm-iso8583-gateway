@@ -18,9 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * REST controller exposing ISO 8583 gateway endpoints.
- *
- * <p>
- * Base path: {@code /api/iso8583}
  */
 @RestController
 @RequestMapping("/iso8583")

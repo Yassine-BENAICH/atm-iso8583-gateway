@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.stream.Collectors;
 
-/**
- * Global exception handler — translates exceptions into the standard
- * {@link ApiError} DTO.
- */
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

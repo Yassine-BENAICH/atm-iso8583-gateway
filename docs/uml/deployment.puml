@@ -1,0 +1,18 @@
+@startuml
+skinparam shadowing false
+
+node "Client" as Client
+
+node "Gateway Host" as HostGW {
+  node "Spring Boot App\n(iso8583-gateway)" as Gateway
+}
+
+node "Switch Host" as HostSW {
+  node "Payment Switch\n(or Iso8583MockSwitch)" as Switch
+}
+
+Client --> Gateway : HTTP/JSON\n:8080
+Gateway --> Switch : TCP/ISO 8583\n:9000
+
+@enduml
+

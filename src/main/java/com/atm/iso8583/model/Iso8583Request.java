@@ -179,7 +179,7 @@ public class Iso8583Request {
     @JsonProperty("additionalFields")
     private Map<Integer, String> additionalFields;
 
-    public Object getTransactionRef() {
-        return null;
-    }
+    @Schema(description = "Client-side transaction reference for tracing", example = "ATM-20260319-0001")
+    @JsonProperty("transactionRef")
+    private String transactionRef;
 }

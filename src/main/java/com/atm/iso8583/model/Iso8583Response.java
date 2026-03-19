@@ -115,7 +115,7 @@ public class Iso8583Response {
     @JsonProperty("errorMessage")
     private String errorMessage;
 
-    public Object getProcessingTimeMs() {
-        return null;
-    }
+    @Schema(description = "End-to-end processing latency in milliseconds", example = "142")
+    @JsonProperty("processingTimeMs")
+    private Long processingTimeMs;
 }

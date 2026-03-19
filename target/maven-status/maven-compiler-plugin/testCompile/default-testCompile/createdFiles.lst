@@ -1,0 +1,5 @@
+com\atm\iso8583\codec\Iso8583CodecTest.class
+com\atm\iso8583\config\RequestLoggingInterceptorTest.class
+com\atm\iso8583\controller\Iso8583ControllerTest.class
+com\atm\iso8583\exception\Iso8583ExceptionTestImpl.class
+com\atm\iso8583\exception\Iso8583ExceptionTest.class

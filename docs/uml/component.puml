@@ -1,0 +1,25 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+actor "API Client" as Client
+
+component "Iso8583Controller\n<<REST>>" as Controller
+component "Iso8583GatewayService\n<<Service>>" as Service
+component "Iso8583Codec\n<<Component>>" as Codec
+component "Iso8583Channel\n<<Component>>" as Channel
+database "iso8583-packager.xml\n(classpath resource)" as Packager
+node "Payment Switch\n(or Mock Switch)" as Switch
+
+Client --> Controller : HTTP/JSON
+Controller --> Service : processTransaction(...)
+Service --> Codec : jsonToIso(...) / isoToJson(...)
+Service --> Channel : sendAndReceive(...)
+
+Codec --> Packager : GenericPackager
+Channel --> Packager : GenericPackager
+
+Channel --> Switch : TCP/ISO 8583
+
+@enduml
+

@@ -1,0 +1,309 @@
+{
+	"info": {
+		"_postman_id": "iso8583-gateway-api",
+		"name": "ISO 8583 Gateway API",
+		"description": "REST API for ISO 8583 message processing - Converts JSON requests to ISO 8583 format and communicates with payment switches",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Balance Inquiry",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "REQ-BAL-{{$randomUUID}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"0200\",\n  \"transactionRef\": \"TXN-BAL-{{$timestamp}}\",\n  \"fields\": {\n    \"2\": \"4111111111111111\",\n    \"3\": \"310000\",\n    \"4\": \"000000000000\",\n    \"7\": \"{{$timestamp}}\",\n    \"11\": \"{{$randomInt}}\",\n    \"12\": \"103045\",\n    \"13\": \"0312\",\n    \"41\": \"ATM00001\",\n    \"49\": \"504\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Balance inquiry transaction (MTI 0200) - Processing code 310000, Currency: MAD (504)"
+					},
+					"response": []
+				},
+				{
+					"name": "Cash Withdrawal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "REQ-WD-{{$randomUUID}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"0200\",\n  \"transactionRef\": \"TXN-WD-{{$timestamp}}\",\n  \"fields\": {\n    \"2\": \"5500000000000004\",\n    \"3\": \"000000\",\n    \"4\": \"000000010000\",\n    \"7\": \"{{$timestamp}}\",\n    \"11\": \"{{$randomInt}}\",\n    \"12\": \"103050\",\n    \"13\": \"0312\",\n    \"37\": \"{{$randomInt}}\",\n    \"41\": \"ATM00001\",\n    \"49\": \"504\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Cash withdrawal transaction (MTI 0200) - Processing code 000000, Amount: 100.00 MAD"
+					},
+					"response": []
+				},
+				{
+					"name": "Purchase Transaction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "REQ-PUR-{{$randomUUID}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"0200\",\n  \"transactionRef\": \"TXN-PUR-{{$timestamp}}\",\n  \"fields\": {\n    \"2\": \"4111111111111111\",\n    \"3\": \"000000\",\n    \"4\": \"000000025000\",\n    \"7\": \"{{$timestamp}}\",\n    \"11\": \"{{$randomInt}}\",\n    \"12\": \"103045\",\n    \"13\": \"0312\",\n    \"37\": \"{{$randomInt}}\",\n    \"41\": \"POS00001\",\n    \"49\": \"504\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Purchase transaction (MTI 0200) - Amount: 250.00 MAD"
+					},
+					"response": []
+				}
+			],
+			"description": "ISO 8583 transaction endpoints"
+		},
+		{
+			"name": "Health & Status",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"health"
+							]
+						},
+						"description": "Check if the gateway service is running and healthy"
+					},
+					"response": []
+				},
+				{
+					"name": "Gateway Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"status"
+							]
+						},
+						"description": "Get detailed gateway status and statistics"
+					},
+					"response": []
+				}
+			],
+			"description": "Health check and status endpoints"
+		},
+		{
+			"name": "Error Scenarios",
+			"item": [
+				{
+					"name": "Insufficient Funds",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "REQ-ERR-{{$randomUUID}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"0200\",\n  \"transactionRef\": \"TXN-ERR-{{$timestamp}}\",\n  \"fields\": {\n    \"2\": \"4111111111111111\",\n    \"3\": \"000000\",\n    \"4\": \"000000999999\",\n    \"7\": \"{{$timestamp}}\",\n    \"11\": \"{{$randomInt}}\",\n    \"12\": \"103045\",\n    \"13\": \"0312\",\n    \"41\": \"ATM00001\",\n    \"49\": \"504\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Test insufficient funds scenario - Expected response code: 51"
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid MTI",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"ABC\",\n  \"fields\": {\n    \"2\": \"4111111111111111\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Test validation error with invalid MTI - Expected: 400 Bad Request"
+					},
+					"response": []
+				},
+				{
+					"name": "Missing Required Fields",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"0200\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Test validation error with missing fields - Expected: 400 Bad Request"
+					},
+					"response": []
+				}
+			],
+			"description": "Error and validation test scenarios"
+		},
+		{
+			"name": "Documentation",
+			"item": [
+				{
+					"name": "Swagger UI",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/swagger-ui.html",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"swagger-ui.html"
+							]
+						},
+						"description": "Access Swagger UI documentation"
+					},
+					"response": []
+				},
+				{
+					"name": "OpenAPI Docs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/docs",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"docs"
+							]
+						},
+						"description": "Get OpenAPI specification in JSON format"
+					},
+					"response": []
+				}
+			],
+			"description": "API documentation endpoints"
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}

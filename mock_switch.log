@@ -1,0 +1,52 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.atm:iso8583-gateway >-----------------------
+[INFO] Building ATM ISO 8583 Gateway 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ iso8583-gateway ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 4 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ iso8583-gateway ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ iso8583-gateway ---
+[INFO] skip non existing resourceDirectory C:\Users\admin\Documents\Antigravity_projects\ATM_ISO8583\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ iso8583-gateway ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- exec:3.6.3:java (default-cli) @ iso8583-gateway ---
+[WARNING] 
+java.net.BindException: Address already in use: bind
+    at sun.nio.ch.Net.bind0 (Native Method)
+    at sun.nio.ch.Net.bind (Net.java:577)
+    at sun.nio.ch.Net.bind (Net.java:566)
+    at sun.nio.ch.NioSocketImpl.bind (NioSocketImpl.java:636)
+    at java.net.ServerSocket.bind (ServerSocket.java:391)
+    at java.net.ServerSocket.<init> (ServerSocket.java:278)
+    at java.net.ServerSocket.<init> (ServerSocket.java:171)
+    at com.atm.iso8583.simulator.Iso8583MockSwitch.start (Iso8583MockSwitch.java:40)
+    at com.atm.iso8583.simulator.Iso8583MockSwitch.main (Iso8583MockSwitch.java:25)
+    at jdk.internal.reflect.DirectMethodHandleAccessor.invoke (DirectMethodHandleAccessor.java:103)
+    at java.lang.reflect.Method.invoke (Method.java:580)
+    at org.codehaus.mojo.exec.AbstractExecJavaBase.executeMainMethod (AbstractExecJavaBase.java:402)
+    at org.codehaus.mojo.exec.ExecJavaMojo.executeMainMethod (ExecJavaMojo.java:142)
+    at org.codehaus.mojo.exec.AbstractExecJavaBase.doExecClassLoader (AbstractExecJavaBase.java:377)
+    at org.codehaus.mojo.exec.AbstractExecJavaBase.lambda$execute$0 (AbstractExecJavaBase.java:287)
+    at java.lang.Thread.run (Thread.java:1583)
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  8.127 s
+[INFO] Finished at: 2026-03-01T04:02:25Z
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.codehaus.mojo:exec-maven-plugin:3.6.3:java (default-cli) on project iso8583-gateway: An exception occurred while executing the Java class. Address already in use: bind -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

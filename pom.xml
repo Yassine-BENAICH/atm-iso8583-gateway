@@ -43,7 +43,7 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- jPOS - ISO 8583 library -->
+        <!-- jPOS - ISO 8583 library (Java 17-compatible) -->
         <dependency>
             <groupId>org.jpos</groupId>
             <artifactId>jpos</artifactId>
@@ -75,6 +75,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <!-- Jackson XML support -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
         </dependency>
 
         <!-- SLF4J / Logback (included via Spring Boot) -->

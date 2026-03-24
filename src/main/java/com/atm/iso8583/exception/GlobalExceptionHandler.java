@@ -1,6 +1,7 @@
 package com.atm.iso8583.exception;
 
 import com.atm.iso8583.model.ApiError;
+import com.atm.iso8583.model.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -19,20 +22,20 @@ public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    /** Bean validation errors on request body fields (@Valid) */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex,
+    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex,
             HttpServletRequest req) {
-        String details = ex.getBindingResult().getFieldErrors().stream()
+        List<String> details = ex.getBindingResult().getFieldErrors().stream()
                 .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
-                .collect(Collectors.joining("; "));
+                .collect(Collectors.toList());
 
-        log.warn("Validation error on {}: {}", req.getRequestURI(), details);
-        return ResponseEntity.badRequest().body(ApiError.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error("Validation Error")
-                .message(details)
+        log.warn("Validation error on {}: {}", req.getRequestURI(), String.join("; ", details));
+        return ResponseEntity.badRequest().body(ErrorResponse.builder()
+                .errorCode("VALIDATION_ERROR")
+                .message("Validation failed")
+                .details(details)
                 .path(req.getRequestURI())
+                .timestamp(LocalDateTime.now())
                 .build());
     }
 

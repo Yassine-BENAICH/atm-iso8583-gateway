@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -14,6 +15,7 @@ import lombok.Builder;
 import java.util.Map;
 
 
+@SuppressWarnings("ALL")
 @Data
 @Builder
 @NoArgsConstructor
@@ -24,7 +26,7 @@ public class Iso8583Request {
 
     @Schema(description = "Message Type Indicator (MTI)", example = "0200", required = true)
     @NotBlank(message = "MTI is required")
-    @Pattern(regexp = "0[12489][0-9]{2}", message = "MTI must be a valid 4-digit ISO 8583 message type")
+    @Pattern(regexp = "[01][0-9]{3}", message = "MTI must be a valid 4-digit ISO 8583 message type")
     @JsonProperty("mti")
     private String mti;
 
@@ -166,8 +168,18 @@ public class Iso8583Request {
     @JsonProperty("originalDataElements")
     private String originalDataElements;
 
+    @Schema(description = "Generic ISO 8583 fields keyed by bit number", example = "{\"2\":\"4111111111111111\"}")
+    @JsonProperty("fields")
+    @NotEmpty(message = "fields must not be empty")
+    private Map<String, String> fields;
+
+
     // ─── Extra / custom fields passed through ─────────────────────────────────
     @Schema(description = "Additional optional fields as key-value pairs (bit number → value)")
     @JsonProperty("additionalFields")
     private Map<Integer, String> additionalFields;
+
+    @Schema(description = "Client-side transaction reference for tracing", example = "ATM-20260319-0001")
+    @JsonProperty("transactionRef")
+    private String transactionRef;
 }

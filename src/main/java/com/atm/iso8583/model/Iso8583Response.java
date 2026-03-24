@@ -114,4 +114,8 @@ public class Iso8583Response {
     @Schema(description = "Error message in case of connectivity or parsing failure")
     @JsonProperty("errorMessage")
     private String errorMessage;
+
+    @Schema(description = "End-to-end processing latency in milliseconds", example = "142")
+    @JsonProperty("processingTimeMs")
+    private Long processingTimeMs;
 }

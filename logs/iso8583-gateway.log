@@ -1,28 +1,70 @@
-2026-03-09T10:52:01.802Z  INFO 138084 --- [ATM ISO8583 Gateway] [main] c.atm.iso8583.Iso8583GatewayApplication  : Starting Iso8583GatewayApplication using Java 21.0.10 with PID 138084 (C:\Users\admin\IdeaProjects\atm-iso8583-gateway\target\classes started by admin in C:\Users\admin\IdeaProjects\atm-iso8583-gateway)
-2026-03-09T10:52:01.846Z DEBUG 138084 --- [ATM ISO8583 Gateway] [main] c.atm.iso8583.Iso8583GatewayApplication  : Running with Spring Boot v3.2.3, Spring v6.1.4
-2026-03-09T10:52:01.848Z  INFO 138084 --- [ATM ISO8583 Gateway] [main] c.atm.iso8583.Iso8583GatewayApplication  : No active profile set, falling back to 1 default profile: "default"
-2026-03-09T10:52:08.431Z  INFO 138084 --- [ATM ISO8583 Gateway] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-03-09T10:52:08.491Z  INFO 138084 --- [ATM ISO8583 Gateway] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-03-09T10:52:08.492Z  INFO 138084 --- [ATM ISO8583 Gateway] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
-2026-03-09T10:52:08.754Z  INFO 138084 --- [ATM ISO8583 Gateway] [main] o.a.c.c.C.[Tomcat].[localhost].[/api]    : Initializing Spring embedded WebApplicationContext
-2026-03-09T10:52:08.755Z  INFO 138084 --- [ATM ISO8583 Gateway] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 6731 ms
-2026-03-09T10:52:17.485Z  INFO 138084 --- [ATM ISO8583 Gateway] [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
-2026-03-09T10:52:24.884Z  INFO 138084 --- [ATM ISO8583 Gateway] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 3 endpoint(s) beneath base path '/actuator'
-2026-03-09T10:52:25.186Z  WARN 138084 --- [ATM ISO8583 Gateway] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
-2026-03-09T10:52:25.266Z  INFO 138084 --- [ATM ISO8583 Gateway] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
-
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-2026-03-09T10:52:25.313Z ERROR 138084 --- [ATM ISO8583 Gateway] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
-
-***************************
-APPLICATION FAILED TO START
-***************************
-
-Description:
-
-Web server failed to start. Port 8080 was already in use.
-
-Action:
-
-Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
-
+2026-03-23T09:51:18.583+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.controller.Iso8583ControllerTest   : Starting Iso8583ControllerTest using Java 21.0.10 with PID 17316 (started by admin in C:\Users\admin\IdeaProjects\atm-iso8583-gateway)
+2026-03-23T09:51:18.690+01:00 DEBUG 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.controller.Iso8583ControllerTest   : Running with Spring Boot v3.2.3, Spring v6.1.4
+2026-03-23T09:51:18.694+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.controller.Iso8583ControllerTest   : No active profile set, falling back to 1 default profile: "default"
+2026-03-23T09:51:57.196+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-03-23T09:51:57.196+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-03-23T09:51:57.216+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/api/actuator'
+2026-03-23T09:51:57.236+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 39 ms
+2026-03-23T09:51:57.573+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.controller.Iso8583ControllerTest   : Started Iso8583ControllerTest in 40.17 seconds (process running for 49.818)
+2026-03-23T09:52:46.876+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [4aed6759-f0b9-4160-820b-c55034d43487] Incoming request: GET /api/iso8583/health from 127.0.0.1
+2026-03-23T09:52:46.942+01:00 DEBUG 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.controller.Iso8583Controller       : Health check requested
+2026-03-23T09:52:47.533+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [4aed6759-f0b9-4160-820b-c55034d43487] Request completed: GET /api/iso8583/health - Status: 200 - Duration: 659ms
+2026-03-23T09:52:48.879+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [ed46d0b3-d270-4790-bdfa-71e9e4c16636] Incoming request: POST /api/iso8583/send from 127.0.0.1
+2026-03-23T09:52:49.650+01:00  WARN 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.exception.GlobalExceptionHandler   : Validation error on /api/iso8583/send: mti: MTI must be a valid 4-digit ISO 8583 message type
+2026-03-23T09:52:49.829+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [ed46d0b3-d270-4790-bdfa-71e9e4c16636] Request completed: POST /api/iso8583/send - Status: 400 - Duration: 950ms
+2026-03-23T09:52:49.842+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [TEST-REQ-123] Incoming request: GET /api/iso8583/health from 127.0.0.1
+2026-03-23T09:52:49.843+01:00 DEBUG 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.controller.Iso8583Controller       : Health check requested
+2026-03-23T09:52:49.843+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [TEST-REQ-123] Request completed: GET /api/iso8583/health - Status: 200 - Duration: 1ms
+2026-03-23T09:52:49.884+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [0cbb9902-d91f-4515-b848-a3cd2152ac65] Incoming request: POST /api/iso8583/send from 127.0.0.1
+2026-03-23T09:52:49.886+01:00  WARN 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.exception.GlobalExceptionHandler   : Validation error on /api/iso8583/send: mti: MTI is required
+2026-03-23T09:52:49.887+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [0cbb9902-d91f-4515-b848-a3cd2152ac65] Request completed: POST /api/iso8583/send - Status: 400 - Duration: 3ms
+2026-03-23T09:52:49.900+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [16345980-3410-4c42-9c46-bdc48af4bfda] Incoming request: POST /api/iso8583/send from 127.0.0.1
+2026-03-23T09:52:49.903+01:00  WARN 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.exception.GlobalExceptionHandler   : Validation error on /api/iso8583/send: fields: fields must not be empty
+2026-03-23T09:52:49.904+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [16345980-3410-4c42-9c46-bdc48af4bfda] Request completed: POST /api/iso8583/send - Status: 400 - Duration: 4ms
+2026-03-23T09:52:49.918+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [b6f7b37e-ebe1-4a7a-b55a-c6d04d194fe3] Incoming request: GET /api/iso8583/status from 127.0.0.1
+2026-03-23T09:52:49.918+01:00 DEBUG 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.controller.Iso8583Controller       : Status check requested
+2026-03-23T09:52:49.919+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [b6f7b37e-ebe1-4a7a-b55a-c6d04d194fe3] Request completed: GET /api/iso8583/status - Status: 200 - Duration: 1ms
+2026-03-23T09:52:49.949+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.atm.iso8583.controller.MonitoringControllerTest]: MonitoringControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-03-23T09:52:49.954+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.atm.iso8583.Iso8583GatewayApplication for test class com.atm.iso8583.controller.MonitoringControllerTest
+2026-03-23T09:52:49.969+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [8158f3c8-4881-4c29-a8f3-f647c6b65636] Incoming request: GET /api/monitoring/events from 127.0.0.1
+2026-03-23T09:52:50.031+01:00  WARN 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.exception.GlobalExceptionHandler   : Constraint violation on /api/monitoring/events: recentEvents.limit: limit must be greater than or equal to 1
+2026-03-23T09:52:50.144+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [8158f3c8-4881-4c29-a8f3-f647c6b65636] Request completed: GET /api/monitoring/events - Status: 400 - Duration: 175ms
+2026-03-23T09:52:50.171+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [82bb7f4c-f7de-4a92-beed-4859ee3df713] Incoming request: GET /api/monitoring/metrics from 127.0.0.1
+2026-03-23T09:52:50.496+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [82bb7f4c-f7de-4a92-beed-4859ee3df713] Request completed: GET /api/monitoring/metrics - Status: 200 - Duration: 325ms
+2026-03-23T09:52:50.508+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [e6497474-a3fb-4eb6-bbb4-55abf68ece09] Incoming request: GET /api/monitoring/events from 127.0.0.1
+2026-03-23T09:52:50.512+01:00  INFO 17316 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [e6497474-a3fb-4eb6-bbb4-55abf68ece09] Request completed: GET /api/monitoring/events - Status: 200 - Duration: 4ms
+2026-03-23T10:01:56.698+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.controller.Iso8583ControllerTest   : Starting Iso8583ControllerTest using Java 21.0.10 with PID 19892 (started by admin in C:\Users\admin\IdeaProjects\atm-iso8583-gateway)
+2026-03-23T10:01:56.700+01:00 DEBUG 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.controller.Iso8583ControllerTest   : Running with Spring Boot v3.2.3, Spring v6.1.4
+2026-03-23T10:01:56.702+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.controller.Iso8583ControllerTest   : No active profile set, falling back to 1 default profile: "default"
+2026-03-23T10:02:04.940+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-03-23T10:02:04.941+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-03-23T10:02:04.969+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/api/actuator'
+2026-03-23T10:02:04.985+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 44 ms
+2026-03-23T10:02:05.335+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.controller.Iso8583ControllerTest   : Started Iso8583ControllerTest in 9.722 seconds (process running for 18.533)
+2026-03-23T10:02:08.392+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [ad06e10e-3e77-4d02-ab6a-5a2969658ce9] Incoming request: GET /api/iso8583/health from 127.0.0.1
+2026-03-23T10:02:08.451+01:00 DEBUG 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.controller.Iso8583Controller       : Health check requested
+2026-03-23T10:02:08.538+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [ad06e10e-3e77-4d02-ab6a-5a2969658ce9] Request completed: GET /api/iso8583/health - Status: 200 - Duration: 148ms
+2026-03-23T10:02:08.917+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [376079ff-026c-40f5-b993-88517b81f30e] Incoming request: POST /api/iso8583/send from 127.0.0.1
+2026-03-23T10:02:10.010+01:00  WARN 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.exception.GlobalExceptionHandler   : Validation error on /api/iso8583/send: mti: MTI must be a valid 4-digit ISO 8583 message type
+2026-03-23T10:02:10.385+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [376079ff-026c-40f5-b993-88517b81f30e] Request completed: POST /api/iso8583/send - Status: 400 - Duration: 1469ms
+2026-03-23T10:02:10.472+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [TEST-REQ-123] Incoming request: GET /api/iso8583/health from 127.0.0.1
+2026-03-23T10:02:10.473+01:00 DEBUG 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.controller.Iso8583Controller       : Health check requested
+2026-03-23T10:02:10.493+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [TEST-REQ-123] Request completed: GET /api/iso8583/health - Status: 200 - Duration: 29ms
+2026-03-23T10:02:10.597+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [244ea424-0483-4a4c-a5a5-27403098b2d8] Incoming request: POST /api/iso8583/send from 127.0.0.1
+2026-03-23T10:02:10.602+01:00  WARN 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.exception.GlobalExceptionHandler   : Validation error on /api/iso8583/send: mti: MTI is required
+2026-03-23T10:02:10.604+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [244ea424-0483-4a4c-a5a5-27403098b2d8] Request completed: POST /api/iso8583/send - Status: 400 - Duration: 6ms
+2026-03-23T10:02:10.619+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [3a2c29fc-7916-4f96-b51b-19315e6430c7] Incoming request: POST /api/iso8583/send from 127.0.0.1
+2026-03-23T10:02:10.651+01:00  WARN 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.exception.GlobalExceptionHandler   : Validation error on /api/iso8583/send: fields: fields must not be empty
+2026-03-23T10:02:10.667+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [3a2c29fc-7916-4f96-b51b-19315e6430c7] Request completed: POST /api/iso8583/send - Status: 400 - Duration: 48ms
+2026-03-23T10:02:10.722+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [385c90e0-454a-4d13-a47b-b1029807754e] Incoming request: GET /api/iso8583/status from 127.0.0.1
+2026-03-23T10:02:10.723+01:00 DEBUG 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.controller.Iso8583Controller       : Status check requested
+2026-03-23T10:02:10.724+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [385c90e0-454a-4d13-a47b-b1029807754e] Request completed: GET /api/iso8583/status - Status: 200 - Duration: 2ms
+2026-03-23T10:02:10.840+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.atm.iso8583.controller.MonitoringControllerTest]: MonitoringControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-03-23T10:02:10.854+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.atm.iso8583.Iso8583GatewayApplication for test class com.atm.iso8583.controller.MonitoringControllerTest
+2026-03-23T10:02:10.868+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [ec543195-57d2-497d-bf11-930e3fa4e8d9] Incoming request: GET /api/monitoring/events from 127.0.0.1
+2026-03-23T10:02:10.968+01:00  WARN 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.exception.GlobalExceptionHandler   : Constraint violation on /api/monitoring/events: recentEvents.limit: limit must be greater than or equal to 1
+2026-03-23T10:02:11.002+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [ec543195-57d2-497d-bf11-930e3fa4e8d9] Request completed: GET /api/monitoring/events - Status: 400 - Duration: 133ms
+2026-03-23T10:02:11.019+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [ee708ecb-3c63-4304-9a1a-0162e0c0acc0] Incoming request: GET /api/monitoring/metrics from 127.0.0.1
+2026-03-23T10:02:11.064+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [ee708ecb-3c63-4304-9a1a-0162e0c0acc0] Request completed: GET /api/monitoring/metrics - Status: 200 - Duration: 45ms
+2026-03-23T10:02:11.102+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [bae07e67-4c8f-4637-9be1-46739269a9b7] Incoming request: GET /api/monitoring/events from 127.0.0.1
+2026-03-23T10:02:11.117+01:00  INFO 19892 --- [ATM ISO8583 Gateway] [main] c.a.i.config.RequestLoggingInterceptor   : [bae07e67-4c8f-4637-9be1-46739269a9b7] Request completed: GET /api/monitoring/events - Status: 200 - Duration: 15ms

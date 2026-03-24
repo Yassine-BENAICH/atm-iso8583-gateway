@@ -10,9 +10,6 @@ import lombok.Builder;
 
 import java.time.Instant;
 
-/**
- * Standard API error response wrapper.
- */
 @Data
 @Builder
 @NoArgsConstructor

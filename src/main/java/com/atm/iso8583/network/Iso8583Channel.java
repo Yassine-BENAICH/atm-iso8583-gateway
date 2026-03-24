@@ -24,10 +24,6 @@ public class Iso8583Channel {
 
     /**
      * Sends an ISO 8583 message to the switch and waits for the response.
-     *
-     * @param requestBytes the serialised request bytes (without length header)
-     * @return raw response bytes (without length header)
-     * @throws IOException on I/O or connection errors
      */
     public byte[] sendAndReceive(byte[] requestBytes) throws IOException {
         log.info("Connecting to switch {}:{}", config.getHost(), config.getPort());
@@ -62,11 +58,6 @@ public class Iso8583Channel {
 
     // ─── Framing helpers ────────────────────────────────────────────────────────
 
-    /**
-     * Writes a length-prefixed message to the output stream.
-     * Header = {@code headerLength} bytes encoding the payload length (big-endian
-     * int).
-     */
     private void writeMessage(DataOutputStream out, byte[] payload) throws IOException {
         int len = config.getHeaderLength();
         switch (len) {

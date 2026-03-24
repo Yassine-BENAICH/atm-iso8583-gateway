@@ -1,8 +1,10 @@
 package com.atm.iso8583.config;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+@Getter
 @Configuration
 public class Iso8583Config {
 
@@ -24,27 +26,4 @@ public class Iso8583Config {
     @Value("${iso8583.institution-id:000001}")
     private String institutionId;
 
-    public String getHost() {
-        return host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public int getConnectTimeout() {
-        return connectTimeout;
-    }
-
-    public int getReadTimeout() {
-        return readTimeout;
-    }
-
-    public int getHeaderLength() {
-        return headerLength;
-    }
-
-    public String getInstitutionId() {
-        return institutionId;
-    }
 }

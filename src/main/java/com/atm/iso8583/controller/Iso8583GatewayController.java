@@ -16,6 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * REST controller exposing ISO 8583 gateway endpoints.
  */
@@ -33,14 +36,13 @@ public class Iso8583GatewayController {
         this.config = config;
     }
 
-    // ─── /send – generic message sender ────────────────────────────────────────
-
     @Operation(summary = "Send ISO 8583 message", description = """
-            Converts the JSON payload to an ISO 8583 message, sends it to the configured
-            switch, waits for the ISO 8583 response, converts it back to JSON and returns it.
+            Converts the payload (JSON or XML) to an ISO 8583 message, sends it to the configured
+            switch, waits for the ISO 8583 response, converts it back to JSON or XML and returns it.
 
-            Supports any MTI: 0100 (auth), 0200 (financial), 0400 (reversal), 0800 (network).
-            """, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "ISO 8583 message fields as JSON", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Iso8583Request.class), examples = {
+            Supports common MTIs: 0100 (auth), 0200 (financial), 0400 (reversal), 0800 (network), 1200 (presentment).
+            """, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "ISO 8583 message fields", required = true, content = {
+            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Iso8583Request.class), examples = {
             @ExampleObject(name = "Authorization Request (0100)", value = """
                     {
                       "mti": "0100",
@@ -112,54 +114,92 @@ public class Iso8583GatewayController {
                       "acquiringInstitutionId": "000001",
                       "networkManagementCode": "301"
                     }
+                    """),
+            @ExampleObject(name = "Presentment (1200)", value = """
+                    {
+                      "mti": "1200",
+                      "pan": "4111111111111111",
+                      "processingCode": "200000",
+                      "amount": "000000050000",
+                      "transmissionDateTime": "0301040000",
+                      "stan": "000010",
+                      "localTime": "040000",
+                      "localDate": "0301",
+                      "acquiringInstitutionId": "000001",
+                      "retrievalReferenceNumber": "123456789099",
+                      "terminalId": "TERM0001",
+                      "merchantId": "MERCHANT000001 ",
+                      "currencyCode": "978"
+                    }
                     """)
-    })))
+            }),
+            @Content(mediaType = MediaType.APPLICATION_XML_VALUE, schema = @Schema(implementation = Iso8583Request.class))
+    }))
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Switch response successfully converted to JSON", content = @Content(schema = @Schema(implementation = Iso8583Response.class))),
+            @ApiResponse(responseCode = "200", description = "Switch response successfully converted", content = @Content(schema = @Schema(implementation = Iso8583Response.class))),
             @ApiResponse(responseCode = "400", description = "Invalid request payload"),
             @ApiResponse(responseCode = "503", description = "Switch unreachable or timeout")
     })
-    @PostMapping(value = "/send", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/send",
+            consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
     public ResponseEntity<Iso8583Response> send(@Valid @RequestBody Iso8583Request request) {
         Iso8583Response response = gatewayService.process(request);
         int httpStatus = resolveHttpStatus(response);
         return ResponseEntity.status(httpStatus).body(response);
     }
 
-    // ─── Convenience endpoints ──────────────────────────────────────────────────
+    // Convenience endpoints
 
-    @Operation(summary = "Authorization request (0100/0110)", description = "Shortcut endpoint – equivalent to POST /send with MTI=0100")
-    @PostMapping(value = "/authorize", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Authorization request (0100/0110)", description = "Shortcut endpoint - equivalent to POST /send with MTI=0100")
+    @PostMapping(value = "/authorize",
+            consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
     public ResponseEntity<Iso8583Response> authorize(@Valid @RequestBody Iso8583Request request) {
         request.setMti("0100");
         return send(request);
     }
 
-    @Operation(summary = "Financial transaction request (0200/0210)", description = "Shortcut endpoint – equivalent to POST /send with MTI=0200")
-    @PostMapping(value = "/financial", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Financial transaction request (0200/0210)", description = "Shortcut endpoint - equivalent to POST /send with MTI=0200")
+    @PostMapping(value = "/financial",
+            consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
     public ResponseEntity<Iso8583Response> financial(@Valid @RequestBody Iso8583Request request) {
         request.setMti("0200");
         return send(request);
     }
 
-    @Operation(summary = "Reversal request (0400/0410)", description = "Shortcut endpoint – equivalent to POST /send with MTI=0400")
-    @PostMapping(value = "/reversal", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Financial presentment request (1200/1210)", description = "Shortcut endpoint - equivalent to POST /send with MTI=1200")
+    @PostMapping(value = "/presentment",
+            consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    public ResponseEntity<Iso8583Response> presentment(@Valid @RequestBody Iso8583Request request) {
+        request.setMti("1200");
+        return send(request);
+    }
+
+    @Operation(summary = "Reversal request (0400/0410)", description = "Shortcut endpoint - equivalent to POST /send with MTI=0400")
+    @PostMapping(value = "/reversal",
+            consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
     public ResponseEntity<Iso8583Response> reversal(@Valid @RequestBody Iso8583Request request) {
         request.setMti("0400");
         return send(request);
     }
 
     @Operation(summary = "Network Management / Echo test (0800/0810)", description = "Sends a network echo (0800/NMC=301) to verify switch connectivity")
-    @PostMapping(value = "/echo", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/echo",
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
     public ResponseEntity<Iso8583Response> echo() {
         Iso8583Response response = gatewayService.sendEchoTest(config.getInstitutionId());
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Get Gateway Configuration", description = "Returns the current target host and port configuration")
-    @GetMapping(value = "/config", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<java.util.Map<String, Object>> getConfig() {
-        java.util.Map<String, Object> cfgMap = new java.util.HashMap<>();
+    @GetMapping(value = "/config",
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    public ResponseEntity<Map<String, Object>> getConfig() {
+        Map<String, Object> cfgMap = new HashMap<>();
         cfgMap.put("host", config.getHost());
         cfgMap.put("port", config.getPort());
         cfgMap.put("institutionId", config.getInstitutionId());
@@ -168,17 +208,15 @@ public class Iso8583GatewayController {
         return ResponseEntity.ok(cfgMap);
     }
 
-    // ─── HTTP status helpers ────────────────────────────────────────────────────
+    // HTTP status helpers
 
     private int resolveHttpStatus(Iso8583Response response) {
         if ("ERROR".equals(response.getStatus())) {
-            // Network / codec errors → 503
             String err = response.getErrorMessage();
             if (err != null && err.contains("timeout"))
                 return 504;
             return 503;
         }
-        // Successful exchange with the switch → 200 regardless of response code
         return 200;
     }
 }

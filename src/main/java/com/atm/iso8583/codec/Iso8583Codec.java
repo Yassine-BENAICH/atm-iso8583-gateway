@@ -11,11 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Bi-directional converter between JSON model and jPOS ISOMsg objects.
- *
- * <p>
  * JSON → ISOMsg (request path): {@link #toISOMsg(Iso8583Request)}
- * <p>
+ *
  * ISOMsg → JSON (response path): {@link #fromISOMsg(ISOMsg)}
  */
 @Component
@@ -141,6 +138,23 @@ public class Iso8583Codec {
         // DE 90 – Original Data Elements
         setIfPresent(msg, 90, req.getOriginalDataElements());
 
+        // Generic fields map (bit number -> value)
+        if (req.getFields() != null) {
+            req.getFields().forEach((bitStr, value) -> {
+                if (value == null || value.isBlank()) {
+                    return;
+                }
+                try {
+                    int bit = Integer.parseInt(bitStr);
+                    msg.set(bit, value);
+                } catch (NumberFormatException e) {
+                    log.warn("Skipping invalid field key '{}': not a number", bitStr);
+                } catch (Exception e) {
+                    log.warn("Could not set field DE{}: {}", bitStr, e.getMessage());
+                }
+            });
+        }
+
         // Extra/additional fields
         if (req.getAdditionalFields() != null) {
             req.getAdditionalFields().forEach((bit, value) -> {
@@ -229,7 +243,7 @@ public class Iso8583Codec {
 
     // ─── Helpers ───────────────────────────────────────────────────────────────
 
-    private void setIfPresent(ISOMsg msg, int fieldNo, String value) throws ISOException {
+    private void setIfPresent(ISOMsg msg, int fieldNo, String value) {
         if (value != null && !value.isBlank()) {
             msg.set(fieldNo, value);
         }
@@ -255,7 +269,4 @@ public class Iso8583Codec {
         };
     }
 
-    public String getResponseDescription(String responseCode) {
-        return RESPONSE_DESC.getOrDefault(responseCode, "Unknown response code: " + responseCode);
-    }
 }

@@ -17,14 +17,14 @@ public class OpenApiConfig {
                         .title("ATM ISO 8583 Gateway API")
                         .description("""
                                 REST API Gateway for ISO 8583 ATM/payment message processing.
-                                
+                               \s
                                 **Flow:**
                                 1. Client sends JSON request → API converts to ISO 8583 → sends to switch
                                 2. Switch returns ISO 8583 response → API converts to JSON → returns to client
-                                
-                                Supports: Authorization (0100/0110), Reversal (0400/0410), 
+                               \s
+                                Supports: Authorization (0100/0110), Reversal (0400/0410),\s
                                 Network Management (0800/0810), Financial Request (0200/0210)
-                                """)
+                               \s""")
                         .version("1.0.0")
                         .contact(new Contact()
                                 .name("ATM Gateway Team")

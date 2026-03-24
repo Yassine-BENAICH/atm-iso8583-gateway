@@ -129,7 +129,7 @@
   <isofield
       id="24"
       length="3"
-      name="NETWORK INTERNATIONAL IDENTIFIEER"
+      name="NETWORK INTERNATIONAL IDENTIFIER"
       class="org.jpos.iso.IFA_NUMERIC"/>
   <isofield
       id="25"

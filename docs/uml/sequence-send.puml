@@ -1,0 +1,39 @@
+@startuml
+hide footbox
+skinparam shadowing false
+autonumber
+
+actor Client
+participant "Iso8583Controller" as Controller
+participant "Iso8583GatewayService" as Service
+participant "Iso8583Codec" as Codec
+participant "Iso8583Channel" as Channel
+participant "Payment Switch\n(or Mock Switch)" as Switch
+participant "GlobalExceptionHandler" as ErrorHandler
+
+Client -> Controller : POST /api/iso8583/send\nIso8583Request (JSON)
+Controller -> Service : processTransaction(request)
+Service -> Codec : jsonToIso(request)
+Codec --> Service : ISOMsg (request)
+Service -> Channel : sendAndReceive(isoRequest)
+Channel -> Switch : TCP send ISOMsg
+Switch --> Channel : TCP response ISOMsg
+Channel --> Service : ISOMsg (response)
+Service -> Codec : isoToJson(isoResponse)
+Codec --> Service : Iso8583Response
+Service --> Controller : Iso8583Response
+Controller --> Client : 200 OK\nIso8583Response (JSON)
+
+alt Codec/Channel failure (Iso8583Exception)
+  Service <-- Codec
+  Service <-- Channel
+  Controller <-- Service : throws Iso8583Exception
+  Controller -> ErrorHandler : handleIso8583Exception(ex)
+  ErrorHandler --> Client : 400 Bad Request\n{ "error": "..." }
+else Unexpected failure
+  Controller -> ErrorHandler : handleGenericException(ex)
+  ErrorHandler --> Client : 500 Internal Server Error\n{ "error": "Internal server error: ..." }
+end
+
+@enduml
+

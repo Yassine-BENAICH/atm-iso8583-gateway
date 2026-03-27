@@ -39,7 +39,7 @@ graph TB
 * **jPOS Integration**: Leverages the industry-standard jPOS library for robust message packaging.
 * **Interactive Simulator**: Includes a built-in Mock Switch for local testing without physical hardware.
 * **OpenAPI Documentation**: Integrated Swagger UI for easy API exploration and testing.
-* **Glassmorphism Dashboard**: A premium UI to visualize live traffic and gateway status.
+* **Angular Monitoring Dashboard**: Real-time UI for gateway traffic, latency, and error tracking.
 
 ---
 
@@ -62,7 +62,7 @@ graph LR
 * **Backend**: Java 17, Spring Boot 3.2
 * **ISO Engine**: [jPOS](http://jpos.org/)
 * **API Specs**: OpenAPI 3.0 / Swagger UI
-* **Frontend**: Vanilla JS, Glassmorphism CSS
+* **Frontend**: Angular 20 (standalone components + SCSS)
 * **Build Tool**: Maven
 * **Containerization**: Docker & Docker Compose
 
@@ -99,10 +99,17 @@ graph LR
     mvn spring-boot:run
     ```
 
-5. **Access the Dashboard**:
-    Open `http://localhost:8080` in your browser.
+5. **Build the Angular Dashboard** (Terminal 3):
+    ```bash
+    cd frontend
+    npm install
+    npm run build:spring
+    ```
 
-6. **Explore the API**:
+6. **Access the Dashboard**:
+    Open `http://localhost:8080/dashboard/` in your browser.
+
+7. **Explore the API**:
     Open `http://localhost:8080/api/swagger-ui.html`.
 
 ---

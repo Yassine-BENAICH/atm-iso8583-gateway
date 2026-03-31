@@ -1,0 +1,167 @@
+<div class="dashboard-shell">
+  <div class="background-layer"></div>
+
+  <header class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">ATM ISO8583 Gateway</p>
+      <h1>Monitoring Dashboard</h1>
+      <p class="subhead">Live traffic quality, latency, and transaction health in one view.</p>
+    </div>
+
+    <div class="hero-meta">
+      <div class="state-chip" [class.state-chip-error]="connectionError()">
+        <span class="state-dot"></span>
+        {{ connectionError() ? 'API degraded' : 'Live stream' }}
+      </div>
+      <p class="stamp">Updated: {{ toDisplayTime(lastUpdated()) }}</p>
+    </div>
+  </header>
+
+  <section class="metric-grid">
+    <article class="metric-card">
+      <p class="metric-label">Total Transactions</p>
+      <p class="metric-value">{{ metrics()?.totalTransactions ?? 0 }}</p>
+      <p class="metric-note">Last minute: {{ metrics()?.transactionsLastMinute ?? 0 }}</p>
+    </article>
+
+    <article class="metric-card">
+      <p class="metric-label">Success Rate</p>
+      <p class="metric-value">{{ metrics()?.successRatePercent ?? 0 | number: '1.0-2' }}%</p>
+      <p class="metric-note">Success: {{ metrics()?.successfulTransactions ?? 0 }}</p>
+    </article>
+
+    <article class="metric-card">
+      <p class="metric-label">Average Latency</p>
+      <p class="metric-value">{{ metrics()?.averageLatencyMs ?? 0 | number: '1.0-2' }}ms</p>
+      <p class="metric-note">P95: {{ metrics()?.p95LatencyMs ?? 0 }}ms</p>
+    </article>
+
+    <article class="metric-card">
+      <p class="metric-label">Gateway Uptime</p>
+      <p class="metric-value">{{ uptimeText() }}</p>
+      <p class="metric-note">Events buffered: {{ metrics()?.recentEventsCount ?? 0 }}</p>
+    </article>
+  </section>
+
+  <section class="panel-grid">
+    <article class="panel panel-wide">
+      <div class="panel-head">
+        <h2>Latency Pulse</h2>
+        <p>Most recent {{ latencyBars().length }} transactions</p>
+      </div>
+      <div class="latency-bars">
+        @for (height of latencyBars(); track $index) {
+          <span class="latency-bar" [style.height.%]="height"></span>
+        }
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-head">
+        <h2>Status Mix</h2>
+      </div>
+      <div class="bar-list">
+        @for (item of statusBreakdown(); track item.key) {
+          <div class="bar-row">
+            <p>{{ item.key }}</p>
+            <div class="bar-track">
+              <span class="bar-fill" [style.width.%]="item.ratio"></span>
+            </div>
+            <p>{{ item.count }}</p>
+          </div>
+        } @empty {
+          <p class="empty">No transactions yet.</p>
+        }
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-head">
+        <h2>Top MTIs</h2>
+      </div>
+      <div class="bar-list">
+        @for (item of mtiBreakdown(); track item.mti) {
+          <div class="bar-row">
+            <p>{{ item.mti }}</p>
+            <div class="bar-track">
+              <span class="bar-fill mti" [style.width.%]="item.ratio"></span>
+            </div>
+            <p>{{ item.count }}</p>
+          </div>
+        } @empty {
+          <p class="empty">No MTI data yet.</p>
+        }
+      </div>
+    </article>
+  </section>
+
+  <section class="table-grid">
+    <article class="panel">
+      <div class="panel-head">
+        <h2>Recent Events</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>MTI</th>
+              <th>RC</th>
+              <th>Status</th>
+              <th>Latency</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (event of events(); track $index) {
+              <tr>
+                <td>{{ toDisplayTime(event.timestamp) }}</td>
+                <td>{{ event.requestMti ?? '-' }}</td>
+                <td>{{ event.responseCode ?? '-' }}</td>
+                <td><span [class]="statusClass(event.status)">{{ event.status }}</span></td>
+                <td>{{ event.latencyMs }}ms</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="empty">No traffic yet.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-head">
+        <h2>Recent Errors</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Type</th>
+              <th>Message</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (event of errorEvents(); track $index) {
+              <tr>
+                <td>{{ toDisplayTime(event.timestamp) }}</td>
+                <td>{{ event.requestMti ?? event.status }}</td>
+                <td>{{ event.errorMessage ?? 'No details' }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="3" class="empty">No recent errors.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+
+  @if (loading()) {
+    <div class="loading-overlay">Loading monitoring data...</div>
+  }
+</div>

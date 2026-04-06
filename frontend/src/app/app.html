@@ -14,8 +14,16 @@
         {{ connectionError() ? 'API degraded' : 'Live stream' }}
       </div>
       <p class="stamp">Updated: {{ toDisplayTime(lastUpdated()) }}</p>
+      <p class="stamp">Refresh interval: 4s</p>
     </div>
   </header>
+
+  @if (connectionError()) {
+    <section class="alert-strip">
+      <p>Monitoring API is temporarily unavailable.</p>
+      <p>{{ connectionError() }}</p>
+    </section>
+  }
 
   <section class="metric-grid">
     <article class="metric-card">
@@ -24,22 +32,35 @@
       <p class="metric-note">Last minute: {{ metrics()?.transactionsLastMinute ?? 0 }}</p>
     </article>
 
-    <article class="metric-card">
+    <article class="metric-card" [class.metric-card-attention]="successTier() === 'watch'">
       <p class="metric-label">Success Rate</p>
       <p class="metric-value">{{ metrics()?.successRatePercent ?? 0 | number: '1.0-2' }}%</p>
-      <p class="metric-note">Success: {{ metrics()?.successfulTransactions ?? 0 }}</p>
+      <div class="mini-meter">
+        <span class="mini-meter-fill" [style.width.%]="metrics()?.successRatePercent ?? 0"></span>
+      </div>
+      <p class="metric-note metric-note-inline">
+        Success: {{ metrics()?.successfulTransactions ?? 0 }}
+        <span
+          class="tier-badge"
+          [class.tier-excellent]="successTier() === 'excellent'"
+          [class.tier-steady]="successTier() === 'steady'"
+          [class.tier-watch]="successTier() === 'watch'"
+        >
+          {{ successTierLabel() }}
+        </span>
+      </p>
     </article>
 
     <article class="metric-card">
       <p class="metric-label">Average Latency</p>
       <p class="metric-value">{{ metrics()?.averageLatencyMs ?? 0 | number: '1.0-2' }}ms</p>
-      <p class="metric-note">P95: {{ metrics()?.p95LatencyMs ?? 0 }}ms</p>
+      <p class="metric-note">P95: {{ metrics()?.p95LatencyMs ?? 0 }}ms · {{ performanceLabel() }}</p>
     </article>
 
     <article class="metric-card">
       <p class="metric-label">Gateway Uptime</p>
       <p class="metric-value">{{ uptimeText() }}</p>
-      <p class="metric-note">Events buffered: {{ metrics()?.recentEventsCount ?? 0 }}</p>
+      <p class="metric-note">Started: {{ toDisplayTime(metrics()?.startedAt) }}</p>
     </article>
   </section>
 
@@ -67,7 +88,7 @@
             <div class="bar-track">
               <span class="bar-fill" [style.width.%]="item.ratio"></span>
             </div>
-            <p>{{ item.count }}</p>
+            <p>{{ item.count }} · {{ item.ratio | number: '1.0-0' }}%</p>
           </div>
         } @empty {
           <p class="empty">No transactions yet.</p>
@@ -86,10 +107,49 @@
             <div class="bar-track">
               <span class="bar-fill mti" [style.width.%]="item.ratio"></span>
             </div>
-            <p>{{ item.count }}</p>
+            <p>{{ item.count }} · {{ item.ratio | number: '1.0-0' }}%</p>
           </div>
         } @empty {
           <p class="empty">No MTI data yet.</p>
+        }
+      </div>
+    </article>
+  </section>
+
+  <section class="insight-grid">
+    <article class="panel signal-panel">
+      <div class="panel-head">
+        <h2>Gateway Signal</h2>
+        <p>{{ performanceLabel() }}</p>
+      </div>
+      <div class="signal-wrap">
+        <div class="signal-track">
+          <span class="signal-fill" [style.width.%]="100 - p95Pressure()"></span>
+        </div>
+        <p class="signal-meta">P95 latency pressure: {{ p95Pressure() }}%</p>
+      </div>
+      <p class="signal-note">
+        Slowest sampled event:
+        <strong>{{ slowestEvent()?.latencyMs ?? 0 }}ms</strong>
+      </p>
+    </article>
+
+    <article class="panel">
+      <div class="panel-head">
+        <h2>Failure Split</h2>
+        <p>Impacted: {{ impactedTransactions() }}</p>
+      </div>
+      <div class="bar-list">
+        @for (item of failureBreakdown(); track item.label) {
+          <div class="bar-row">
+            <p>{{ item.label }}</p>
+            <div class="bar-track">
+              <span class="bar-fill" [ngClass]="item.cssClass" [style.width.%]="item.ratio"></span>
+            </div>
+            <p>{{ item.count }} · {{ item.ratio | number: '1.0-1' }}%</p>
+          </div>
+        } @empty {
+          <p class="empty">No failed transactions in current window.</p>
         }
       </div>
     </article>
@@ -106,6 +166,7 @@
             <tr>
               <th>Time</th>
               <th>MTI</th>
+              <th>STAN</th>
               <th>RC</th>
               <th>Status</th>
               <th>Latency</th>
@@ -116,13 +177,14 @@
               <tr>
                 <td>{{ toDisplayTime(event.timestamp) }}</td>
                 <td>{{ event.requestMti ?? '-' }}</td>
+                <td>{{ event.stan ?? '-' }}</td>
                 <td>{{ event.responseCode ?? '-' }}</td>
                 <td><span [class]="statusClass(event.status)">{{ event.status }}</span></td>
                 <td>{{ event.latencyMs }}ms</td>
               </tr>
             } @empty {
               <tr>
-                <td colspan="5" class="empty">No traffic yet.</td>
+                <td colspan="6" class="empty">No traffic yet.</td>
               </tr>
             }
           </tbody>
@@ -162,6 +224,6 @@
   </section>
 
   @if (loading()) {
-    <div class="loading-overlay">Loading monitoring data...</div>
+    <div class="loading-overlay">Syncing monitoring data...</div>
   }
 </div>

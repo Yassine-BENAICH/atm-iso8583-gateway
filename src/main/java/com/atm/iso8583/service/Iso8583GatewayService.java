@@ -3,7 +3,7 @@ package com.atm.iso8583.service;
 import com.atm.iso8583.codec.Iso8583Codec;
 import com.atm.iso8583.model.Iso8583Request;
 import com.atm.iso8583.model.Iso8583Response;
-import com.atm.iso8583.network.Iso8583Channel;
+import com.atm.iso8583.powercard.PowerCardClient;
 import org.jpos.iso.ISOException;
 import org.jpos.iso.ISOMsg;
 import org.jpos.iso.packager.GenericPackager;
@@ -23,15 +23,15 @@ public class Iso8583GatewayService {
     private static final Logger log = LoggerFactory.getLogger(Iso8583GatewayService.class);
 
     private final Iso8583Codec codec;
-    private final Iso8583Channel channel;
+    private final PowerCardClient powerCardClient;
     private final MonitoringService monitoringService;
     private final GenericPackager packager;
 
     public Iso8583GatewayService(Iso8583Codec codec,
-            Iso8583Channel channel,
+            PowerCardClient powerCardClient,
             MonitoringService monitoringService) throws ISOException {
         this.codec = codec;
-        this.channel = channel;
+        this.powerCardClient = powerCardClient;
         this.monitoringService = monitoringService;
 
         InputStream packagerXml = getClass().getClassLoader().getResourceAsStream("packager/custom_iso87.xml");
@@ -41,7 +41,7 @@ public class Iso8583GatewayService {
         this.packager = new GenericPackager(packagerXml);
     }
 
-    public Iso8583Response process(Iso8583Request request) {
+    public Iso8583Response processTransaction(Iso8583Request request) {
         long start = System.currentTimeMillis();
         log.info("Processing request | MTI={} STAN={}", request.getMti(), request.getStan());
 
@@ -53,7 +53,7 @@ public class Iso8583GatewayService {
             byte[] requestBytes = requestMsg.pack();
             log.info("Packed ISO 8583 message | {} bytes", requestBytes.length);
 
-            byte[] responseBytes = channel.sendAndReceive(requestBytes);
+            byte[] responseBytes = powerCardClient.exchange(requestBytes);
 
             ISOMsg responseMsg = new ISOMsg();
             responseMsg.setPackager(packager);
@@ -93,7 +93,7 @@ public class Iso8583GatewayService {
                 .networkManagementCode("301")
                 .acquiringInstitutionId(institutionId)
                 .build();
-        return process(echoReq);
+        return processTransaction(echoReq);
     }
 
     private Iso8583Response buildErrorResponse(String message) {
@@ -109,7 +109,4 @@ public class Iso8583GatewayService {
         return formatter.format(Instant.now());
     }
 
-    public Iso8583Response processTransaction(Iso8583Request request) {
-        return process(request);
-    }
 }

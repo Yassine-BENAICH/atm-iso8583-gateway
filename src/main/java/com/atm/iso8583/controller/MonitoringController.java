@@ -46,4 +46,16 @@ public class MonitoringController {
             int limit) {
         return ResponseEntity.ok(monitoringService.getRecentEvents(limit));
     }
+
+    @GetMapping(value = "/errors",
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @Operation(summary = "Get recent failed operations only")
+    public ResponseEntity<List<TrafficEvent>> recentErrors(
+            @Parameter(description = "Maximum number of failed events to return (1-500)")
+            @RequestParam(defaultValue = "50")
+            @Min(value = 1, message = "limit must be greater than or equal to 1")
+            @Max(value = 500, message = "limit must be less than or equal to 500")
+            int limit) {
+        return ResponseEntity.ok(monitoringService.getRecentErrors(limit));
+    }
 }

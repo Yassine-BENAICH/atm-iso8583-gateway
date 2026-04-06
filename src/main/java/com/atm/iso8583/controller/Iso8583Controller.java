@@ -1,8 +1,10 @@
 package com.atm.iso8583.controller;
 
+import com.atm.iso8583.config.Iso8583Config;
 import com.atm.iso8583.model.Iso8583Request;
 import com.atm.iso8583.model.Iso8583Response;
 import com.atm.iso8583.service.Iso8583GatewayService;
+import com.atm.iso8583.service.Iso8583ResponseStatusResolver;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,12 +24,14 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/iso8583")
+@RequestMapping({ "/api/iso8583", "/iso8583" })
 @RequiredArgsConstructor
 @Tag(name = "ISO 8583 Gateway", description = "REST API for ISO 8583 message processing")
 public class Iso8583Controller {
 
     private final Iso8583GatewayService gatewayService;
+    private final Iso8583Config iso8583Config;
+    private final Iso8583ResponseStatusResolver statusResolver;
 
     @PostMapping(value = "/send",
             produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
@@ -58,21 +62,82 @@ public class Iso8583Controller {
     public ResponseEntity<Iso8583Response> sendMessage(
             @Valid @RequestBody Iso8583Request request,
             @RequestHeader(value = "X-Request-ID", required = false) String requestId) {
-        
+        return processAndRespond(request, requestId);
+    }
+
+    @PostMapping(value = "/authorize",
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
+            consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @Operation(summary = "Authorization request", description = "Shortcut endpoint equivalent to /send with MTI 0100")
+    public ResponseEntity<Iso8583Response> authorize(@Valid @RequestBody Iso8583Request request) {
+        request.setMti("0100");
+        return processAndRespond(request, null);
+    }
+
+    @PostMapping(value = "/financial",
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
+            consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @Operation(summary = "Financial request", description = "Shortcut endpoint equivalent to /send with MTI 0200")
+    public ResponseEntity<Iso8583Response> financial(@Valid @RequestBody Iso8583Request request) {
+        request.setMti("0200");
+        return processAndRespond(request, null);
+    }
+
+    @PostMapping(value = "/presentment",
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
+            consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @Operation(summary = "Presentment request", description = "Shortcut endpoint equivalent to /send with MTI 1200")
+    public ResponseEntity<Iso8583Response> presentment(@Valid @RequestBody Iso8583Request request) {
+        request.setMti("1200");
+        return processAndRespond(request, null);
+    }
+
+    @PostMapping(value = "/reversal",
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
+            consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @Operation(summary = "Reversal request", description = "Shortcut endpoint equivalent to /send with MTI 0400")
+    public ResponseEntity<Iso8583Response> reversal(@Valid @RequestBody Iso8583Request request) {
+        request.setMti("0400");
+        return processAndRespond(request, null);
+    }
+
+    @PostMapping(value = "/echo",
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @Operation(summary = "Network echo", description = "Sends an 0800/301 echo test to check switch connectivity")
+    public ResponseEntity<Iso8583Response> echo() {
+        Iso8583Response response = gatewayService.sendEchoTest(iso8583Config.getInstitutionId());
+        return ResponseEntity.status(statusResolver.resolve(response)).body(response);
+    }
+
+    @GetMapping(value = "/config",
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @Operation(summary = "Gateway config", description = "Returns current ISO 8583 network configuration")
+    public ResponseEntity<Map<String, Object>> config() {
+        Map<String, Object> cfg = new HashMap<>();
+        cfg.put("host", iso8583Config.getHost());
+        cfg.put("port", iso8583Config.getPort());
+        cfg.put("connectTimeout", iso8583Config.getConnectTimeout());
+        cfg.put("readTimeout", iso8583Config.getReadTimeout());
+        cfg.put("headerLength", iso8583Config.getHeaderLength());
+        cfg.put("institutionId", iso8583Config.getInstitutionId());
+        return ResponseEntity.ok(cfg);
+    }
+
+    private ResponseEntity<Iso8583Response> processAndRespond(Iso8583Request request, String requestId) {
         log.info("Received ISO8583 request - MTI: {}, RequestID: {}, TransactionRef: {}",
                 request.getMti(), requestId, request.getTransactionRef());
-        
+
         Iso8583Response response = gatewayService.processTransaction(request);
         if (response == null) {
             log.error("Gateway service returned null response");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        
-        HttpStatus status = determineHttpStatus(response.getResponseCode());
-        
+
+        HttpStatus status = statusResolver.resolve(response);
+
         log.info("Completed ISO8583 request - MTI: {}, ResponseCode: {}, Status: {}, Duration: {}ms",
                 response.getMti(), response.getResponseCode(), status, response.getProcessingTimeMs());
-        
+
         return ResponseEntity.status(status).body(response);
     }
 
@@ -109,19 +174,5 @@ public class Iso8583Controller {
         
         log.debug("Status check requested");
         return ResponseEntity.ok(status);
-    }
-
-    private HttpStatus determineHttpStatus(String responseCode) {
-        if (responseCode == null) {
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        
-        return switch (responseCode) {
-            case "00" -> HttpStatus.OK;
-            case "05", "14", "41", "43" -> HttpStatus.FORBIDDEN;
-            case "51", "61" -> HttpStatus.PAYMENT_REQUIRED;
-            case "91", "96" -> HttpStatus.SERVICE_UNAVAILABLE;
-            default -> HttpStatus.BAD_REQUEST;
-        };
     }
 }

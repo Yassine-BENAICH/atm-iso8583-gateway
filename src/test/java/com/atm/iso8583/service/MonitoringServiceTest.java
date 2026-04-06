@@ -11,6 +11,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MonitoringServiceTest {
 
@@ -70,5 +71,25 @@ class MonitoringServiceTest {
         assertEquals(2, events.size());
         assertEquals("ERROR", events.get(0).getStatus());
         assertEquals("DECLINED", events.get(1).getStatus());
+    }
+
+    @Test
+    void shouldRecordApiFailuresAndExposeRecentErrors() {
+        MonitoringService monitoringService = new MonitoringService();
+
+        monitoringService.recordApiFailure("/api/iso8583/send", 400, "Validation failed", 14L);
+        monitoringService.recordApiFailure("/api/iso8583/echo", 503, "Switch timeout", 120L);
+
+        TrafficMetrics metrics = monitoringService.getCurrentMetrics();
+        assertEquals(2L, metrics.getTotalTransactions());
+        assertEquals(0L, metrics.getSuccessfulTransactions());
+        assertEquals(0L, metrics.getDeclinedTransactions());
+        assertEquals(2L, metrics.getErrorTransactions());
+
+        List<TrafficEvent> errors = monitoringService.getRecentErrors(10);
+        assertEquals(2, errors.size());
+        assertTrue(errors.stream().allMatch(event -> "ERROR".equals(event.getStatus())));
+        assertEquals("503", errors.get(0).getResponseCode());
+        assertTrue(errors.get(0).getErrorMessage().contains("Switch timeout"));
     }
 }

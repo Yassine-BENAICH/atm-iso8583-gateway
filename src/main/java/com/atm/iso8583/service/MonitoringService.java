@@ -40,16 +40,7 @@ public class MonitoringService {
         long safeLatency = Math.max(0L, latencyMs);
         Outcome outcome = classifyOutcome(response);
 
-        totalTransactions.increment();
-        totalLatencyMs.add(safeLatency);
-        minLatencyMs.accumulateAndGet(safeLatency, Math::min);
-        maxLatencyMs.accumulateAndGet(safeLatency, Math::max);
-
-        switch (outcome) {
-            case SUCCESS -> successfulTransactions.increment();
-            case DECLINED -> declinedTransactions.increment();
-            case ERROR -> errorTransactions.increment();
-        }
+        recordOutcome(outcome, safeLatency);
 
         String errorMessage = outcome == Outcome.ERROR && response != null ? normalize(response.getErrorMessage()) : null;
         TrafficEvent event = TrafficEvent.builder()
@@ -63,15 +54,28 @@ public class MonitoringService {
                 .errorMessage(errorMessage)
                 .build();
 
-        historyLock.lock();
-        try {
-            recentEvents.addLast(event);
-            recentLatenciesMs.addLast(safeLatency);
-            trimToLimit(recentEvents);
-            trimToLimit(recentLatenciesMs);
-        } finally {
-            historyLock.unlock();
-        }
+        appendEvent(event, safeLatency);
+    }
+
+    public void recordApiFailure(String path, int httpStatus, String errorMessage, long latencyMs) {
+        long safeLatency = Math.max(0L, latencyMs);
+        recordOutcome(Outcome.ERROR, safeLatency);
+
+        String normalizedPath = normalize(path);
+        String normalizedMessage = normalize(errorMessage);
+        String combinedMessage = normalizedPath == null
+                ? normalizedMessage
+                : normalizedPath + (normalizedMessage == null ? "" : " - " + normalizedMessage);
+
+        TrafficEvent event = TrafficEvent.builder()
+                .timestamp(Instant.now())
+                .requestMti("API_ERROR")
+                .responseCode(String.valueOf(httpStatus))
+                .status(Outcome.ERROR.name())
+                .latencyMs(safeLatency)
+                .errorMessage(combinedMessage)
+                .build();
+        appendEvent(event, safeLatency);
     }
 
     public TrafficMetrics getCurrentMetrics() {
@@ -133,6 +137,27 @@ public class MonitoringService {
         }
     }
 
+    public List<TrafficEvent> getRecentErrors(int limit) {
+        int safeLimit = Math.max(1, Math.min(limit, MAX_RECENT_EVENTS));
+
+        historyLock.lock();
+        try {
+            List<TrafficEvent> snapshot = new ArrayList<>(recentEvents);
+            Collections.reverse(snapshot);
+
+            List<TrafficEvent> errors = snapshot.stream()
+                    .filter(event -> "ERROR".equalsIgnoreCase(event.getStatus()))
+                    .toList();
+
+            if (errors.size() <= safeLimit) {
+                return new ArrayList<>(errors);
+            }
+            return new ArrayList<>(errors.subList(0, safeLimit));
+        } finally {
+            historyLock.unlock();
+        }
+    }
+
     private Outcome classifyOutcome(Iso8583Response response) {
         if (response == null) {
             return Outcome.ERROR;
@@ -156,6 +181,31 @@ public class MonitoringService {
     private <T> void trimToLimit(Deque<T> deque) {
         while (deque.size() > MAX_RECENT_EVENTS) {
             deque.pollFirst();
+        }
+    }
+
+    private void recordOutcome(Outcome outcome, long safeLatency) {
+        totalTransactions.increment();
+        totalLatencyMs.add(safeLatency);
+        minLatencyMs.accumulateAndGet(safeLatency, Math::min);
+        maxLatencyMs.accumulateAndGet(safeLatency, Math::max);
+
+        switch (outcome) {
+            case SUCCESS -> successfulTransactions.increment();
+            case DECLINED -> declinedTransactions.increment();
+            case ERROR -> errorTransactions.increment();
+        }
+    }
+
+    private void appendEvent(TrafficEvent event, long safeLatency) {
+        historyLock.lock();
+        try {
+            recentEvents.addLast(event);
+            recentLatenciesMs.addLast(safeLatency);
+            trimToLimit(recentEvents);
+            trimToLimit(recentLatenciesMs);
+        } finally {
+            historyLock.unlock();
         }
     }
 

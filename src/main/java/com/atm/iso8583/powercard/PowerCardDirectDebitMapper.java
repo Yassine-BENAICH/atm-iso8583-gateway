@@ -71,7 +71,7 @@ public class PowerCardDirectDebitMapper {
                 .posEntryMode(request.getPosEntryMode())
                 .posConditionCode(request.getPosConditionCode())
                 .cardAcceptorNameLocation(request.getCardAcceptorNameLocation())
-                .additionalFields(additionalFields.isEmpty() ? null : additionalFields)
+                .additionalFields(additionalFields)
                 .transactionRef(request.getTransactionRef())
                 .build();
     }

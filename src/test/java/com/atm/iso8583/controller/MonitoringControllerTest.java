@@ -39,4 +39,18 @@ class MonitoringControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("Constraint Violation"));
     }
+
+    @Test
+    void errorsEndpointShouldReturnArray() throws Exception {
+        mockMvc.perform(get("/api/monitoring/errors").param("limit", "5"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray());
+    }
+
+    @Test
+    void errorsEndpointShouldValidateLimitRange() throws Exception {
+        mockMvc.perform(get("/api/monitoring/errors").param("limit", "0"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Constraint Violation"));
+    }
 }

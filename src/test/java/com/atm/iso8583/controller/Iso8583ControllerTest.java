@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -42,14 +43,43 @@ class Iso8583ControllerTest {
     }
 
     @Test
+    void testRootPathServesDashboard() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl("/index.html"));
+    }
+
+    @Test
+    void testUnknownStaticPathReturns404() throws Exception {
+        mockMvc.perform(get("/missing-static-page"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Not Found"));
+    }
+
+    @Test
+    void testLegacySwaggerPathRedirectsToConfiguredPath() throws Exception {
+        mockMvc.perform(get("/swagger-ui.html"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/api/swagger-ui.html"));
+    }
+
+    @Test
+    void testConfiguredSwaggerPathIsExposed() throws Exception {
+        mockMvc.perform(get("/api/swagger-ui.html"))
+                .andExpect(result -> assertNotEquals(404, result.getResponse().getStatus()));
+    }
+
+    @Test
     void testSendMessageValidationError_MissingMti() throws Exception {
         Iso8583Request request = Iso8583Request.builder()
                 .fields(Map.of("2", "1234567890123456"))
                 .build();
+        String content = objectMapper.writeValueAsString(request);
+        MediaType contentType = MediaType.APPLICATION_JSON;
 
         mockMvc.perform(post("/api/iso8583/send")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .contentType(contentType)
+                        .content(content))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorCode").value("VALIDATION_ERROR"));
     }
@@ -60,10 +90,12 @@ class Iso8583ControllerTest {
                 .mti("ABC")
                 .fields(Map.of("2", "1234567890123456"))
                 .build();
+        String content = objectMapper.writeValueAsString(request);
+        MediaType contentType = MediaType.APPLICATION_JSON;
 
         mockMvc.perform(post("/api/iso8583/send")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .contentType(contentType)
+                        .content(content))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorCode").value("VALIDATION_ERROR"));
     }
@@ -74,10 +106,12 @@ class Iso8583ControllerTest {
                 .mti("0200")
                 .fields(new HashMap<>())
                 .build();
+        String content = objectMapper.writeValueAsString(request);
+        MediaType contentType = MediaType.APPLICATION_JSON;
 
         mockMvc.perform(post("/api/iso8583/send")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .contentType(contentType)
+                        .content(content))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorCode").value("VALIDATION_ERROR"));
     }

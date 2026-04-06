@@ -5,6 +5,7 @@ The ISO 8583 Gateway follows a clean layered architecture, abstracting the compl
 ## Component Overview
 
 The main components are:
+
 *   **Controller**: Exposes RESTful endpoints and handles request body validation.
 *   **Service**: Orchestrates the round-trip from JSON to ISO 8583 and back.
 *   **Codec**: Converts the JSON model to jPOS `ISOMsg` and vice-versa.
@@ -109,6 +110,7 @@ sequenceDiagram
 Fields are mapped according to the **ISO 8583:1987** specification. The mapping rules are defined in the `Iso8583Codec` class and the `src/main/resources/packager/custom_iso87.xml` file.
 
 Key fields include:
+
 *   **DE 2**: Card Number (Primary Account Number)
 *   **DE 4**: Transaction Amount (12-digit, zero-padded)
 *   **DE 11**: System Trace Audit Number (STAN)

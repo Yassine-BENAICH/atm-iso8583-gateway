@@ -39,8 +39,8 @@ class Iso8583CodecTest {
                 .amount("000000010000")
                 .stan("000001")
                 .terminalId("TERM0001")
-                .merchantId("MERCHANT000001 ")
-                .currencyCode("978")
+                .merchantId("MERCHANT000005 ")
+                .currencyCode("504")
                 .build();
 
         ISOMsg msg = codec.toISOMsg(req);
@@ -52,7 +52,7 @@ class Iso8583CodecTest {
         assertThat(msg.getString(4)).isEqualTo("000000010000");
         assertThat(msg.getString(11)).isEqualTo("000001");
         assertThat(msg.getString(41)).isEqualTo("TERM0001");
-        assertThat(msg.getString(49)).isEqualTo("978");
+        assertThat(msg.getString(49)).isEqualTo("504");
     }
 
     @Test
@@ -85,7 +85,7 @@ class Iso8583CodecTest {
         msg.set(38, "AUTH01");
         msg.set(39, "00");
         msg.set(41, "TERM0001");
-        msg.set(49, "978");
+        msg.set(49, "504");
 
         Iso8583Response response = codec.fromISOMsg(msg);
 
@@ -122,8 +122,6 @@ class Iso8583CodecTest {
         Iso8583Response response = codec.fromISOMsg(msg);
         assertThat(response.getResponseDescription()).startsWith("Unknown response code");
     }
-
-    // ─── Round-trip ────────────────────────────────────────────────────────────
 
     @Test
     @DisplayName("Round-trip: toISOMsg → pack → unpack → fromISOMsg preserves key fields")

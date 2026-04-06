@@ -20,7 +20,7 @@ services:
     build: .
     container_name: iso8583-mock-switch
     ports:
-      - "9000:9000"
+      - "9000:9002"
     command: ["java", "-cp", "app.jar", "com.atm.iso8583.simulator.Iso8583MockSwitch", "9000"]
     networks:
       - atm-net

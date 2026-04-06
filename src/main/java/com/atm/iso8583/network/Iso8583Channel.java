@@ -1,6 +1,7 @@
 package com.atm.iso8583.network;
 
 import com.atm.iso8583.config.Iso8583Config;
+import com.atm.iso8583.powercard.PowerCardClient;
 import org.jpos.iso.ISOUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,7 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 
 @Component
-public class Iso8583Channel {
+public class Iso8583Channel implements PowerCardClient {
 
     private static final Logger log = LoggerFactory.getLogger(Iso8583Channel.class);
 
@@ -54,6 +55,11 @@ public class Iso8583Channel {
             log.error("I/O error communicating with switch: {}", e.getMessage());
             throw e;
         }
+    }
+
+    @Override
+    public byte[] exchange(byte[] requestBytes) throws IOException {
+        return sendAndReceive(requestBytes);
     }
 
     // ─── Framing helpers ────────────────────────────────────────────────────────

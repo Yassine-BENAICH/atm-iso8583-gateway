@@ -1,135 +1,146 @@
 # ATM ISO 8583 Gateway
-A high-performance REST API Gateway designed to bridge modern JSON-based applications with legacy financial switches using the **ISO 8583:1987** standard.
-```mermaid
-graph TB
-    subgraph "External Client Network"
-        FE[ATM / Web Dashboard]
-    end
 
-    subgraph "ISO 8583 Gateway (Spring Boot)"
-        direction TB
-        API[REST Controller]
-        Service[Gateway Service]
-        Codec[ISO 8583 Codec]
-        Channel[TCP Channel]
-        
-        API -- "JSON" --> Service
-        Service -- "JSON" --> Codec
-        Codec -- "ISOMsg" --> Service
-        Service -- "ISO 8583 Bytes" --> Channel
-    end
-
-    subgraph "Financial Switch Network"
-        Switch[Mock Switch / Host]
-    end
-
-    FE -- "POST /api/iso8583/send" --> API
-    Channel -- "TCP/IP Port 9000" --> Switch
-    Switch -- "Approved (00)" --> Channel
-
-    style API fill:#f9f,stroke:#333,stroke-width:2px
-    style Switch fill:#00d2ff,stroke:#0575E6,stroke-width:2px
-    style Service fill:#d4fc79,stroke:#96e6a1,stroke-width:2px
-```
-
-## Key Features
-
-* **JSON to ISO 8583 Conversion**: Bi-directional transformation of complex financial messages.
-* **Modern REST API**: Exposure of standard banking operations (Auth, Financial, Reversal) via clean endpoints.
-* **jPOS Integration**: Leverages the industry-standard jPOS library for robust message packaging.
-* **Interactive Simulator**: Includes a built-in Mock Switch for local testing without physical hardware.
-* **OpenAPI Documentation**: Integrated Swagger UI for easy API exploration and testing.
-* **Glassmorphism Dashboard**: A premium UI to visualize live traffic and gateway status.
-
----
-
-## System Architecture
-
-The gateway acts as an orchestration layer between your backend and the payment switch.
-
-```mermaid
-graph LR
-    User([Frontend/Client]) -- JSON --> Gateway[ISO 8583 Gateway]
-    Gateway -- TCP/ISO 8583 --> Switch[Payment Switch / Host]
-    Switch -- TCP/ISO 8583 --> Gateway
-    Gateway -- JSON --> User
-```
-
----
+Spring Boot REST API gateway that accepts JSON, packs it into ISO 8583 (via jPOS), sends it over TCP to a switch, then returns the ISO 8583 response as JSON.
 
 ## Tech Stack
 
-* **Backend**: Java 17, Spring Boot 3.2
-* **ISO Engine**: [jPOS](http://jpos.org/)
-* **API Specs**: OpenAPI 3.0 / Swagger UI
-* **Frontend**: Vanilla JS, Glassmorphism CSS
-* **Build Tool**: Maven
-* **Containerization**: Docker & Docker Compose
+- Java 17
+- Spring Boot 3.2.3
+- jPOS 2.1.10
+- Maven
+- OpenAPI / Swagger UI (springdoc)
 
----
+## Prerequisites
 
-## Getting Started
+- JDK 17+
+- Maven 3.8+
 
-### Prerequisites
+## Quick Start
 
-* JDK 17 or higher
-* Maven 3.8+
-* Docker (Optional, for containerized deployment)
+### 1. Start the Mock Switch (port 9000)
 
-### Local Development
+Option A: Run the `com.atm.iso8583.simulator.Iso8583MockSwitch` main class from your IDE.
 
-1. **Clone the repository**:
-    ```bash
-    git clone https://github.com/your-repo/atm-iso8583-gateway.git
-    cd atm-iso8583-gateway
-    ```
-
-2. **Build the project**:
-    ```bash
-    mvn clean install
-    ```
-
-3. **Start the Mock Switch** (Terminal 1):
-    ```bash
-    mvn test-compile exec:java -Dexec.mainClass=com.atm.iso8583.simulator.Iso8583MockSwitch
-    ```
-
-4. **Start the Gateway Application** (Terminal 2):
-    ```bash
-    mvn spring-boot:run
-    ```
-
-5. **Access the Dashboard**:
-    Open `http://localhost:8080` in your browser.
-
-6. **Explore the API**:
-    Open `http://localhost:8080/api/swagger-ui.html`.
-
----
-
-## Docker Deployment
-
-To run the entire ecosystem (Gateway + Mock Switch) in containers:
+Option B: Run via Maven (uses the Maven Exec plugin):
 
 ```bash
-docker-compose up --build
+mvn -DskipTests test-compile exec:java -Dexec.mainClass=com.atm.iso8583.simulator.Iso8583MockSwitch
 ```
 
-The gateway will be available at `http://localhost:8080` and the mock switch will be internal to the docker network.
+The mock switch auto-responds with approval (`DE39=00`) and flips the MTI from `x200` to `x210` (e.g. `0200` -> `0210`).
 
----
+### 2. Start the Gateway (port 8080)
 
-## Documentation
+```bash
+mvn spring-boot:run
+```
 
-For detailed information, please refer to the following guides:
+### 3. OpenAPI / Swagger
 
-* [API Guide](docs/api_guide.md) - Endpoint details and JSON payloads.
-* [Class Diagram & Architecture](docs/architecture.md) - Deep dive into the internal design.
-* [Configuration Guide](docs/configuration.md) - How to customize network settings.
-* [Simulation & Testing](docs/mock_switch.md) - Using the mock switch for development.
+- Swagger UI: `http://localhost:8080/api/swagger-ui.html`
+- OpenAPI JSON: `http://localhost:8080/api/docs`
 
----
+## API
 
-## License
+### Health
 
-This project is licensed under the MIT License.
+`GET /api/iso8583/health`
+
+Response:
+
+```text
+Gateway is running
+```
+
+### Send ISO 8583
+
+`POST /api/iso8583/send`
+
+Request body:
+
+- `mti`: ISO 8583 MTI (e.g. `0200`)
+- `fields`: object where keys are ISO field numbers as strings and values are field values (e.g. `"11": "123456"`)
+
+Example:
+
+PowerShell:
+
+```powershell
+$body = @{
+  mti = "0200"
+  fields = @{
+    "2" = "1234567890123456"
+    "3" = "000000"
+    "4" = "000000010000"
+    "11" = "123456"
+    "41" = "12345678"
+    "49" = "840"
+  }
+} | ConvertTo-Json -Depth 5
+
+Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/iso8583/send" -ContentType "application/json" -Body $body
+```
+
+Bash:
+
+```bash
+curl -X POST "http://localhost:8080/api/iso8583/send" \
+  -H "Content-Type: application/json" \
+  -d '{"mti":"0200","fields":{"2":"1234567890123456","3":"000000","4":"000000010000","11":"123456","41":"12345678","49":"840"}}'
+```
+
+Example response shape:
+
+```json
+{
+  "mti": "0210",
+  "fields": {
+    "0": "0210",
+    "2": "1234567890123456",
+    "3": "000000",
+    "4": "000000010000",
+    "11": "123456",
+    "39": "00",
+    "41": "12345678",
+    "49": "840"
+  },
+  "responseCode": "00",
+  "message": "Success"
+}
+```
+
+## Configuration
+
+Default config lives in `src/main/resources/application.properties`:
+
+```properties
+server.port=8080
+iso8583.switch.host=localhost
+iso8583.switch.port=9000
+iso8583.switch.timeout=30000
+
+springdoc.api-docs.path=/api/docs
+springdoc.swagger-ui.path=/api/swagger-ui.html
+```
+
+## ISO 8583 Packager
+
+The packager definition is `src/main/resources/iso8583-packager.xml`.
+
+Currently defined fields:
+
+- 0 (MTI)
+- 1 (Bitmap)
+- 2, 3, 4, 7, 11, 12, 13
+- 37, 39, 41, 49
+
+## Tests
+
+```bash
+mvn test
+```
+
+## Notes / Limitations
+
+- No authentication/authorization yet.
+- Packager and supported fields are intentionally minimal (expand `iso8583-packager.xml` as needed).

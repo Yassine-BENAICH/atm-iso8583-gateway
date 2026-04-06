@@ -24,7 +24,7 @@ import java.util.Map;
 @Schema(description = "ISO 8583 message request in JSON format")
 public class Iso8583Request {
 
-    @Schema(description = "Message Type Indicator (MTI)", example = "0200", required = true)
+    @Schema(description = "Message Type Indicator (MTI)", example = "0200")
     @NotBlank(message = "MTI is required")
     @Pattern(regexp = "[01][0-9]{3}", message = "MTI must be a valid 4-digit ISO 8583 message type")
     @JsonProperty("mti")

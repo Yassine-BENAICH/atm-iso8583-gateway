@@ -48,7 +48,7 @@ management:
     web:
       exposure:
         include: health,info,metrics
-      '[base-path]': /api/actuator
+  '[endpoints.web.base-path]': /api/actuator
   endpoint:
     health:
       show-details: always

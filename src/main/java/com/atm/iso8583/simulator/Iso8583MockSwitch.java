@@ -10,7 +10,7 @@ import java.net.Socket;
 
 /**
  * A simple mock ISO 8583 switch for testing.
- * Listens on port 9000, accepts connections, responds to messages.
+ * Listens on port 9002, accepts connections, responds to messages.
  */
 public class Iso8583MockSwitch {
 
@@ -18,7 +18,7 @@ public class Iso8583MockSwitch {
     private final GenericPackager packager;
 
     public static void main(String[] args) throws Exception {
-        int port = 9000;
+        int port = 9002;
         if (args.length > 0)
             port = Integer.parseInt(args[0]);
         new Iso8583MockSwitch(port).start();

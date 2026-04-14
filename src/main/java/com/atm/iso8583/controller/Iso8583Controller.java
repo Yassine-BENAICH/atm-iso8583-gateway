@@ -5,6 +5,8 @@ import com.atm.iso8583.model.Iso8583Request;
 import com.atm.iso8583.model.Iso8583Response;
 import com.atm.iso8583.service.Iso8583GatewayService;
 import com.atm.iso8583.service.Iso8583ResponseStatusResolver;
+import com.atm.iso8583.service.TransactionService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,6 +34,7 @@ public class Iso8583Controller {
     private final Iso8583GatewayService gatewayService;
     private final Iso8583Config iso8583Config;
     private final Iso8583ResponseStatusResolver statusResolver;
+    private final TransactionService transactionService;
 
     @PostMapping(value = "/send",
             produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
@@ -137,6 +140,8 @@ public class Iso8583Controller {
 
         log.info("Completed ISO8583 request - MTI: {}, ResponseCode: {}, Status: {}, Duration: {}ms",
                 response.getMti(), response.getResponseCode(), status, response.getProcessingTimeMs());
+
+        transactionService.saveTransaction(request, response);
 
         return ResponseEntity.status(status).body(response);
     }

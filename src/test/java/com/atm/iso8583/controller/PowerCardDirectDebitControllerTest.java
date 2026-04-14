@@ -31,7 +31,6 @@ class PowerCardDirectDebitControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @SuppressWarnings("deprecation")
     @MockBean
     private Iso8583GatewayService gatewayService;
 

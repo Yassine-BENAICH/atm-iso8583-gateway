@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Conception et developpement d&#x27;une passerelle ISO 8583</title>
+    <link rel="stylesheet" href="file:///C:/Users/admin/IdeaProjects/atm-iso8583-gateway/docs/pfe/pfe-report.css" />
+  </head>
+  <body>
+    
+    <section class="cover-page">
+      <div class="cover-topbar"></div>
+      <div class="cover-body">
+        <p class="cover-country">Royaume du Maroc</p>
+        <p class="cover-ministry">Ministere de l'Enseignement Superieur, de la Recherche Scientifique et de l'Innovation</p>
+        <p class="cover-school">ENSET Mohammedia</p>
+        <p class="cover-program">Big Data and Cloud Computing</p>
+        <p class="cover-kind">Rapport de Projet de Fin d'Etudes</p>
+        <h1>Conception et developpement d&#x27;une passerelle ISO 8583</h1>
+        <div class="cover-grid">
+          <div>
+            <span class="label">Realise par</span>
+            <strong>YASSINE BENAICH</strong>
+          </div>
+          <div>
+            <span class="label">Entreprise d'accueil</span>
+            <strong>Hightech Payment Systems</strong>
+          </div>
+          <div>
+            <span class="label">Lieu</span>
+            <strong>Casablanca</strong>
+          </div>
+          <div>
+            <span class="label">Periode</span>
+            <strong>Du 13 janvier 2026 au 12 juin 2026</strong>
+          </div>
+          <div>
+            <span class="label">Encadrant academique</span>
+            <strong>MOHAMED YOUSSFI</strong>
+          </div>
+          <div>
+            <span class="label">Encadrant professionnel</span>
+            <strong>OTHMAN KHOULFY</strong>
+          </div>
+        </div>
+        <p class="cover-year">Annee universitaire : 2025 / 2026</p>
+      </div>
+      <div class="cover-bottombar"></div>
+    </section>
+    
+    <section class="toc-page">
+      <h2>Sommaire</h2>
+      <div class="toc-card">
+        <div class="toc">
+<ul>
+<li><a href="#rapport-de-projet-de-fin-detudes">Rapport De Projet De Fin D'Etudes</a><ul>
+<li><a href="#remerciements">Remerciements</a></li>
+<li><a href="#resume">Resume</a></li>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#liste-des-acronymes">Liste des acronymes</a></li>
+<li><a href="#liste-des-figures">Liste des figures</a></li>
+<li><a href="#liste-des-tableaux">Liste des tableaux</a></li>
+<li><a href="#introduction-generale">Introduction generale</a></li>
+<li><a href="#chapitre-1-presentation-de-lentreprise-et-contexte-du-stage">Chapitre 1 : Presentation de l'entreprise et contexte du stage</a><ul>
+<li><a href="#11-presentation-de-hightech-payment-systems">1.1 Presentation de Hightech Payment Systems</a></li>
+<li><a href="#12-secteur-dactivite-et-environnement-de-paiement">1.2 Secteur d'activite et environnement de paiement</a></li>
+<li><a href="#13-contexte-general-du-stage">1.3 Contexte general du stage</a></li>
+<li><a href="#14-problematique-metier">1.4 Problematique metier</a></li>
+<li><a href="#15-cahier-de-mission">1.5 Cahier de mission</a></li>
+<li><a href="#16-methodologie-de-travail-adoptee">1.6 Methodologie de travail adoptee</a></li>
+<li><a href="#17-conclusion">1.7 Conclusion</a></li>
+</ul>
+</li>
+<li><a href="#chapitre-2-problematique-et-expression-des-besoins">Chapitre 2 : Problematique et expression des besoins</a><ul>
+<li><a href="#21-introduction">2.1 Introduction</a></li>
+<li><a href="#22-presentation-du-protocole-iso-8583">2.2 Presentation du protocole ISO 8583</a></li>
+<li><a href="#23-fonctionnement-des-echanges-monetiques-atm">2.3 Fonctionnement des echanges monetiques ATM</a></li>
+<li><a href="#24-analyse-de-lexistant">2.4 Analyse de l'existant</a></li>
+<li><a href="#25-limites-de-lapproche-traditionnelle">2.5 Limites de l'approche traditionnelle</a></li>
+<li><a href="#26-besoins-fonctionnels">2.6 Besoins fonctionnels</a></li>
+<li><a href="#27-besoins-non-fonctionnels">2.7 Besoins non fonctionnels</a></li>
+<li><a href="#28-contraintes-techniques">2.8 Contraintes techniques</a></li>
+<li><a href="#29-conclusion">2.9 Conclusion</a></li>
+</ul>
+</li>
+<li><a href="#chapitre-3-analyse-et-conception-de-la-solution">Chapitre 3 : Analyse et conception de la solution</a><ul>
+<li><a href="#31-introduction">3.1 Introduction</a></li>
+<li><a href="#32-objectifs-de-la-passerelle">3.2 Objectifs de la passerelle</a></li>
+<li><a href="#33-architecture-generale-proposee">3.3 Architecture generale proposee</a></li>
+<li><a href="#34-choix-technologiques">3.4 Choix technologiques</a></li>
+<li><a href="#35-description-des-composants-principaux">3.5 Description des composants principaux</a></li>
+<li><a href="#36-diagramme-de-cas-dutilisation">3.6 Diagramme de cas d'utilisation</a></li>
+<li><a href="#37-diagramme-de-composants">3.7 Diagramme de composants</a></li>
+<li><a href="#38-diagramme-de-sequence">3.8 Diagramme de sequence</a></li>
+<li><a href="#39-modelisation-des-donnees-iso-8583">3.9 Modelisation des donnees ISO 8583</a></li>
+<li><a href="#310-conclusion">3.10 Conclusion</a></li>
+</ul>
+</li>
+<li><a href="#chapitre-4-realisation-technique">Chapitre 4 : Realisation technique</a><ul>
+<li><a href="#41-introduction">4.1 Introduction</a></li>
+<li><a href="#42-mise-en-place-du-projet-backend">4.2 Mise en place du projet backend</a></li>
+<li><a href="#43-developpement-du-controleur-rest">4.3 Developpement du controleur REST</a></li>
+<li><a href="#44-developpement-du-service-de-traitement-iso-8583">4.4 Developpement du service de traitement ISO 8583</a></li>
+<li><a href="#45-implementation-du-codec-jsonxml-vers-iso-8583">4.5 Implementation du codec JSON/XML vers ISO 8583</a></li>
+<li><a href="#46-implementation-du-canal-tcpip">4.6 Implementation du canal TCP/IP</a></li>
+<li><a href="#47-integration-de-jpos-et-du-packager-personnalise">4.7 Integration de jPOS et du packager personnalise</a></li>
+<li><a href="#48-developpement-de-la-facade-xml-powercard">4.8 Developpement de la facade XML powerCARD</a></li>
+<li><a href="#49-gestion-des-exceptions-et-des-statuts-http">4.9 Gestion des exceptions et des statuts HTTP</a></li>
+<li><a href="#410-journalisation-et-tracabilite">4.10 Journalisation et tracabilite</a></li>
+<li><a href="#411-developpement-du-module-de-monitoring">4.11 Developpement du module de monitoring</a></li>
+<li><a href="#412-developpement-du-dashboard-angular">4.12 Developpement du dashboard Angular</a></li>
+<li><a href="#413-conclusion">4.13 Conclusion</a></li>
+</ul>
+</li>
+<li><a href="#chapitre-5-tests-validation-et-deploiement">Chapitre 5 : Tests, validation et deploiement</a><ul>
+<li><a href="#51-introduction">5.1 Introduction</a></li>
+<li><a href="#52-strategie-de-test">5.2 Strategie de test</a></li>
+<li><a href="#53-tests-unitaires">5.3 Tests unitaires</a></li>
+<li><a href="#54-tests-dintegration">5.4 Tests d'integration</a></li>
+<li><a href="#55-validation-fonctionnelle">5.5 Validation fonctionnelle</a></li>
+<li><a href="#56-utilisation-du-mock-switch">5.6 Utilisation du mock switch</a></li>
+<li><a href="#57-documentation-swagger-et-collection-postman">5.7 Documentation Swagger et collection Postman</a></li>
+<li><a href="#58-conteneurisation-avec-docker">5.8 Conteneurisation avec Docker</a></li>
+<li><a href="#59-limites-observees">5.9 Limites observees</a></li>
+<li><a href="#510-conclusion">5.10 Conclusion</a></li>
+</ul>
+</li>
+<li><a href="#chapitre-6-bilan-et-perspectives">Chapitre 6 : Bilan et perspectives</a><ul>
+<li><a href="#61-bilan-technique">6.1 Bilan technique</a></li>
+<li><a href="#62-competences-acquises">6.2 Competences acquises</a></li>
+<li><a href="#63-difficultes-rencontrees">6.3 Difficultes rencontrees</a></li>
+<li><a href="#64-solutions-apportees">6.4 Solutions apportees</a></li>
+<li><a href="#65-limites-du-systeme-actuel">6.5 Limites du systeme actuel</a></li>
+<li><a href="#66-perspectives-damelioration">6.6 Perspectives d'amelioration</a></li>
+<li><a href="#67-conclusion">6.7 Conclusion</a></li>
+</ul>
+</li>
+<li><a href="#conclusion-generale">Conclusion generale</a></li>
+<li><a href="#bibliographie">Bibliographie</a></li>
+<li><a href="#annexes">Annexes</a><ul>
+<li><a href="#annexe-a-exemples-de-routes-principales">Annexe A : Exemples de routes principales</a></li>
+<li><a href="#annexe-b-exemple-de-requete-json">Annexe B : Exemple de requete JSON</a></li>
+<li><a href="#annexe-c-exemple-de-requete-xml-powercard">Annexe C : Exemple de requete XML powerCARD</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+
+      </div>
+    </section>
+    <main class="report-body">
+      <h1 id="rapport-de-projet-de-fin-detudes">Rapport De Projet De Fin D'Etudes</h1>
+<h2 id="remerciements">Remerciements</h2>
+<p>Je tiens a adresser mes sinceres remerciements a toutes les personnes qui ont contribue a la reussite de ce projet de fin d'etudes. Mes premiers remerciements vont a mon encadrant academique, Monsieur MOHAMED YOUSSFI, pour son accompagnement, ses orientations pertinentes et son suivi durant toute la periode du stage. Je remercie egalement mon encadrant professionnel, Monsieur OTHMAN KHOULFY, pour sa disponibilite, sa confiance et la qualite de ses conseils techniques au sein de Hightech Payment Systems. J'exprime aussi ma gratitude a l'ensemble de l'equipe de l'entreprise pour son accueil, son professionnalisme et le partage de son expertise dans le domaine des systemes de paiement. Enfin, je remercie ma famille et mes proches pour leur soutien moral et leurs encouragements.</p>
+<h2 id="resume">Resume</h2>
+<p>Ce projet de fin d'etudes, realise au sein de Hightech Payment Systems a Casablanca, porte sur la conception et le developpement d'une passerelle ISO 8583 destinee a assurer l'interconnexion entre des applications modernes et des systemes monetiques historiques. Dans les environnements bancaires, de nombreux equipements et plateformes de paiement communiquent encore a l'aide du protocole ISO 8583, tandis que les nouvelles applications utilisent principalement des API REST basees sur JSON ou XML. L'objectif du projet a ete de developper une solution capable de convertir des requetes HTTP en messages ISO 8583, de les transmettre vers un switch bancaire via TCP/IP, puis de reconvertir les reponses dans des formats exploitables par les clients. La solution implementee repose sur Java 17, Spring Boot 3.2.3, jPOS 2.1.10 et Angular 20. Elle integre egalement un simulateur de switch, une facade XML pour un cas d'usage powerCARD, un module de monitoring temps reel et une documentation Swagger/OpenAPI. Le projet apporte ainsi une reponse concrete a une problematique d'interoperabilite, de supervision et de modernisation des echanges monetiques.</p>
+<h2 id="abstract">Abstract</h2>
+<p>This final-year project, carried out at Hightech Payment Systems in Casablanca, focuses on the design and development of an ISO 8583 gateway intended to bridge modern applications with legacy payment systems. In banking environments, many ATM and payment infrastructures still rely on ISO 8583, while modern software ecosystems mainly use REST APIs with JSON or XML payloads. The main objective of this project was to build a solution able to transform HTTP requests into ISO 8583 messages, send them to a payment switch over TCP/IP, and convert the received responses back into client-friendly formats. The implemented solution is based on Java 17, Spring Boot 3.2.3, jPOS 2.1.10, and Angular 20. It also includes a mock switch for testing, an XML facade for a powerCARD direct debit use case, a real-time monitoring module, and Swagger/OpenAPI documentation. The project provides a practical answer to interoperability, observability, and modernization challenges in payment systems.</p>
+<h2 id="liste-des-acronymes">Liste des acronymes</h2>
+<ul>
+<li><code>ATM</code> : Automated Teller Machine</li>
+<li><code>API</code> : Application Programming Interface</li>
+<li><code>ISO 8583</code> : norme de messagerie pour les transactions bancaires par carte</li>
+<li><code>MTI</code> : Message Type Indicator</li>
+<li><code>DE</code> : Data Element</li>
+<li><code>STAN</code> : System Trace Audit Number</li>
+<li><code>RRN</code> : Retrieval Reference Number</li>
+<li><code>EMV</code> : Europay MasterCard Visa</li>
+<li><code>TCP/IP</code> : Transmission Control Protocol / Internet Protocol</li>
+<li><code>PFE</code> : Projet de Fin d'Etudes</li>
+</ul>
+<h2 id="liste-des-figures">Liste des figures</h2>
+<ul>
+<li>Figure 1 : Diagramme de cas d'utilisation de la passerelle</li>
+<li>Figure 2 : Diagramme de composants de la solution</li>
+<li>Figure 3 : Diagramme de sequence d'une transaction ISO 8583</li>
+<li>Figure 4 : Diagramme de deploiement de la solution</li>
+</ul>
+<h2 id="liste-des-tableaux">Liste des tableaux</h2>
+<ul>
+<li>Tableau 1 : Synthese des objectifs du projet</li>
+<li>Tableau 2 : Besoins fonctionnels et non fonctionnels</li>
+<li>Tableau 3 : Stack technologique retenue</li>
+<li>Tableau 4 : Endpoints exposes par la passerelle</li>
+<li>Tableau 5 : Strategie de test et validation</li>
+</ul>
+<h2 id="introduction-generale">Introduction generale</h2>
+<p>Le secteur des paiements electroniques repose sur des infrastructures critiques, robustes et fortement standardisees. Malgre l'evolution rapide des technologies web, une partie importante des echanges bancaires continue de s'appuyer sur la norme ISO 8583, particulierement utilisee dans les transactions ATM, les terminaux de paiement et les switchs monetiques. Ce standard reste tres present dans les architectures legacy, tandis que les applications actuelles consomment principalement des services exposes sous forme d'API REST. Cette difference de paradigme engendre des difficultes d'integration, de test, de maintenance et de supervision.</p>
+<p>Dans ce contexte, le present projet de fin d'etudes vise a concevoir une passerelle ISO 8583 permettant de relier ces deux univers technologiques. L'idee est de proposer une interface moderne, documentee et exploitable par des applications web ou des systemes tiers, tout en assurant la compatibilite avec les mecanismes de communication propres aux infrastructures de paiement. Le projet ne se limite pas a la simple conversion de messages. Il inclut egalement la gestion des erreurs, la supervision des transactions, la simulation d'un switch bancaire, l'exposition d'un tableau de bord de monitoring et la preparation au deploiement.</p>
+<p>L'interet academique de ce travail reside dans la convergence de plusieurs domaines : le developpement backend, l'integration applicative, les protocoles financiers, le monitoring et le deploiement. L'interet professionnel est tout aussi important, car la solution developpee repond a un besoin concret de simplification des integrations dans un environnement de paiement.</p>
+<p>La demarche adoptee durant le stage a ete incrementale. Une premiere phase a consiste a comprendre le protocole ISO 8583 et a etudier les besoins reels de l'entreprise. Une deuxieme phase a porte sur la conception de l'architecture logicielle et le choix des technologies. Une troisieme phase a ete consacree au developpement du gateway, du codec, du canal TCP, de la facade XML et du monitoring. Enfin, une phase de validation et de mise en forme a permis de consolider le resultat final.</p>
+<p>Le tableau suivant resume les objectifs majeurs du projet.</p>
+<table>
+<thead>
+<tr>
+<th>Objectif</th>
+<th>Finalite</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exposer des APIs modernes</td>
+<td>Simplifier l'integration avec des clients REST et XML</td>
+</tr>
+<tr>
+<td>Convertir les messages</td>
+<td>Relier JSON/XML et ISO 8583</td>
+</tr>
+<tr>
+<td>Assurer l'echange TCP</td>
+<td>Communiquer avec un switch ou un mock switch</td>
+</tr>
+<tr>
+<td>Superviser l'activite</td>
+<td>Mesurer trafic, latence, succes et erreurs</td>
+</tr>
+<tr>
+<td>Documenter et tester</td>
+<td>Faciliter la validation et l'appropriation du systeme</td>
+</tr>
+</tbody>
+</table>
+<h2 id="chapitre-1-presentation-de-lentreprise-et-contexte-du-stage">Chapitre 1 : Presentation de l'entreprise et contexte du stage</h2>
+<h3 id="11-presentation-de-hightech-payment-systems">1.1 Presentation de Hightech Payment Systems</h3>
+<p>Hightech Payment Systems evolue dans le domaine des technologies de paiement electronique. Ce type d'entreprise intervient dans un environnement critique ou la disponibilite des services, la fiabilite des transactions et la compatibilite avec les normes monetiques sont essentielles. Le stage s'inscrit dans cette dynamique de modernisation des plateformes et des interfaces d'integration.</p>
+<p>L'interet de realiser un PFE dans cet environnement est particulierement important. Il permet de travailler sur des problemes reels, lies a l'interconnexion entre applications modernes, switchs de paiement, canaux de communication et outils de supervision. Le sujet retenu offre donc un cadre a la fois academique et professionnel, avec une forte valeur pratique.</p>
+<h3 id="12-secteur-dactivite-et-environnement-de-paiement">1.2 Secteur d'activite et environnement de paiement</h3>
+<p>Le secteur des paiements se caracterise par une forte contrainte de disponibilite, une exigence de securite elevee et une necessite permanente de compatibilite entre systemes heterogenes. Les banques, les switchs, les terminaux et les ATM doivent echanger des informations de facon fiable, standardisee et auditable.</p>
+<p>Dans cet environnement, ISO 8583 occupe une place centrale. Il sert de langage commun pour representer les transactions par carte, les messages de gestion reseau et plusieurs flux monetiques. Cependant, les applications recentes n'interagissent plus directement avec ce standard et preferent des API web plus simples a consommer.</p>
+<h3 id="13-contexte-general-du-stage">1.3 Contexte general du stage</h3>
+<p>Le stage s'est deroule a Casablanca du 13 janvier 2026 au 12 juin 2026. Le besoin exprime au depart etait de mettre en place une passerelle applicative capable d'exposer des services modernes tout en restant compatible avec un ecosyteme de paiement heritage. L'enjeu etait donc de construire une solution intermediaire robuste, lisible et exploitable.</p>
+<p>Le projet a aussi ete pense comme un socle de demonstration et de validation. Il ne s'agissait pas uniquement d'envoyer des messages ISO 8583, mais egalement de fournir une documentation, des tests, une simulation locale et un dashboard de supervision.</p>
+<h3 id="14-problematique-metier">1.4 Problematique metier</h3>
+<p>La problematique metier centrale peut etre resumee de la maniere suivante : comment permettre a des clients applicatifs modernes de consommer facilement des operations monetiques alors que les switchs bancaires utilisent encore un protocole bas niveau comme ISO 8583 sur TCP/IP ?</p>
+<p>Sans passerelle dediee, chaque client devrait connaitre le format des messages, les champs obligatoires, les regles de packing, la gestion du header reseau et l'interpretation des reponses. Une telle approche est couteuse, peu maintenable et source d'erreurs. La passerelle devient donc un composant de simplification et de securisation des integrations.</p>
+<h3 id="15-cahier-de-mission">1.5 Cahier de mission</h3>
+<p>La mission confiee durant le stage peut etre sintetisee autour des axes suivants :</p>
+<ul>
+<li>analyser les contraintes techniques du protocole ISO 8583,</li>
+<li>concevoir une architecture logicielle modulaire,</li>
+<li>developper une API REST capable d'interfacer un switch ISO 8583,</li>
+<li>ajouter une facade XML orientee metier,</li>
+<li>mettre en place un systeme de monitoring temps reel,</li>
+<li>fournir un mock switch pour les tests locaux,</li>
+<li>documenter et preparer le deploiement de la solution.</li>
+</ul>
+<h3 id="16-methodologie-de-travail-adoptee">1.6 Methodologie de travail adoptee</h3>
+<p>La methodologie adoptee a ete iterative. Une premiere etape a consiste a etudier le besoin et le protocole. Une deuxieme etape a porte sur la conception de l'architecture et le choix des composants. Une troisieme etape a ete consacree a l'implementation progressive du gateway, du monitoring, du simulateur et de la facade metier. Enfin, une etape de test et de formalisation a permis de consolider le projet.</p>
+<p>Cette approche a permis de valider rapidement les fondations techniques, puis d'enrichir la solution par couches successives sans perdre la coherence d'ensemble.</p>
+<h3 id="17-conclusion">1.7 Conclusion</h3>
+<p>Ce premier chapitre a permis de situer le stage dans son contexte institutionnel et technique. Il montre que le projet repond a une problematique reelle d'interoperabilite entre applications modernes et infrastructures monetiques. Le chapitre suivant detaille l'existant, les limites observees et les besoins qui ont conduit a la conception de la passerelle.</p>
+<h2 id="chapitre-2-problematique-et-expression-des-besoins">Chapitre 2 : Problematique et expression des besoins</h2>
+<h3 id="21-introduction">2.1 Introduction</h3>
+<p>Avant de construire la solution, il etait necessaire de comprendre l'environnement existant, ses contraintes et les besoins reels du projet. Ce travail d'analyse a permis d'eviter une approche purement technique deconnectee des usages attendus.</p>
+<h3 id="22-presentation-du-protocole-iso-8583">2.2 Presentation du protocole ISO 8583</h3>
+<p>ISO 8583 est un standard de messagerie utilise dans les transactions financieres par carte. Il organise l'information sous forme de message type indicator, de bitmap et de data elements. Chaque data element transporte une information metier precise, comme le numero de carte, le montant, le code traitement, le terminal d'origine, la devise ou le code retour.</p>
+<p>La norme est particulierement adaptee aux infrastructures monetiques, car elle offre un cadre stable, compact et largement reconnu. En revanche, elle reste difficile a manipuler directement depuis des applications qui privilegient des structures de donnees plus lisibles comme JSON ou XML.</p>
+<h3 id="23-fonctionnement-des-echanges-monetiques-atm">2.3 Fonctionnement des echanges monetiques ATM</h3>
+<p>Dans un flux ATM classique, une application ou un equipement collecte les informations de transaction, construit un message ISO 8583 puis l'envoie a un switch via TCP/IP. Le switch traite la demande, consulte si necessaire d'autres systemes metier, puis renvoie une reponse ISO 8583 contenant un code resultat. L'equipement ou l'application appelante doit alors interpreter ce code et agir en consequence.</p>
+<p>Ce mode de fonctionnement est fiable mais il expose les clients a une forte complexite technique. Toute erreur dans le formatage du message, la gestion du canal ou la lecture de la reponse peut compromettre le traitement.</p>
+<h3 id="24-analyse-de-lexistant">2.4 Analyse de l'existant</h3>
+<p>L'analyse de l'existant montre que les systemes traditionnels reposent sur des interactions bas niveau qui ne sont pas directement exploitables par des clients applicatifs modernes. Les echanges sont souvent realises via socket TCP, avec une gestion explicite des en-tetes de longueur, du framing reseau et des structures ISO 8583.</p>
+<p>Du cote des applications modernes, les attentes sont differentes : API documentees, formats structurés, messages lisibles, erreurs comprehensibles et mecanismes de supervision. Il existe donc un ecart important entre les usages attendus cote client et la realite technique du protocole.</p>
+<h3 id="25-limites-de-lapproche-traditionnelle">2.5 Limites de l'approche traditionnelle</h3>
+<p>Les limites principales de l'approche traditionnelle sont les suivantes :</p>
+<ul>
+<li>forte dependance des clients a la structure ISO 8583,</li>
+<li>complexite des tests en l'absence de switch accessible,</li>
+<li>faible lisibilite des erreurs et des retours,</li>
+<li>difficulte de supervision des temps de reponse et des incidents,</li>
+<li>faible reutilisabilite des integrations.</li>
+</ul>
+<h3 id="26-besoins-fonctionnels">2.6 Besoins fonctionnels</h3>
+<p>Le projet devait donc couvrir les besoins fonctionnels suivants :</p>
+<ul>
+<li>envoyer des messages ISO 8583 generiques,</li>
+<li>proposer des endpoints dedies a l'autorisation, au financier, au presentment, au reversal et a l'echo test,</li>
+<li>exposer une facade XML pour un direct debit powerCARD,</li>
+<li>offrir des endpoints de sante, de statut et de configuration,</li>
+<li>suivre les transactions via un module de monitoring,</li>
+<li>permettre des tests locaux avec un mock switch.</li>
+</ul>
+<h3 id="27-besoins-non-fonctionnels">2.7 Besoins non fonctionnels</h3>
+<p>Les besoins non fonctionnels identifies sont :</p>
+<ul>
+<li>maintenabilite de l'architecture,</li>
+<li>performance acceptable du gateway,</li>
+<li>tracabilite des requetes,</li>
+<li>observabilite des erreurs et des latences,</li>
+<li>documentation des interfaces,</li>
+<li>simplicite de deploiement.</li>
+</ul>
+<h3 id="28-contraintes-techniques">2.8 Contraintes techniques</h3>
+<p>Les principales contraintes techniques sont liees a :</p>
+<ul>
+<li>la conformite au standard ISO 8583:1987,</li>
+<li>l'echange via TCP/IP avec header de longueur,</li>
+<li>la gestion de champs binaires et hexadecimaux,</li>
+<li>la compatibilite avec un format XML metier specifique,</li>
+<li>l'absence de switch de production pendant le developpement.</li>
+</ul>
+<p>Le tableau ci-dessous resume les attentes fonctionnelles et non fonctionnelles.</p>
+<table>
+<thead>
+<tr>
+<th>Type de besoin</th>
+<th>Contenu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fonctionnel</td>
+<td>Envoi ISO 8583, echo, direct debit XML, monitoring, documentation</td>
+</tr>
+<tr>
+<td>Non fonctionnel</td>
+<td>Fiabilite, lisibilite, testabilite, observabilite, deployabilite</td>
+</tr>
+</tbody>
+</table>
+<h3 id="29-conclusion">2.9 Conclusion</h3>
+<p>L'etude de l'existant a confirme la necessite de disposer d'une couche intermediaire entre les clients modernes et les systemes monetiques. Cette couche devait prendre la forme d'une passerelle capable d'encapsuler la complexite du protocole tout en exposant des interfaces simples a consommer. Le chapitre suivant presente la conception retenue pour repondre a ce besoin.</p>
+<h2 id="chapitre-3-analyse-et-conception-de-la-solution">Chapitre 3 : Analyse et conception de la solution</h2>
+<h3 id="31-introduction">3.1 Introduction</h3>
+<p>La phase de conception avait pour objectif de transformer les besoins identifies en une architecture claire, evolutive et suffisamment rigoureuse pour un contexte de paiement. Le choix n'etait pas seulement technologique : il devait aussi favoriser la maintenabilite, la lisibilite et la capacite de test.</p>
+<h3 id="32-objectifs-de-la-passerelle">3.2 Objectifs de la passerelle</h3>
+<p>La passerelle devait atteindre plusieurs objectifs complementaires :</p>
+<ul>
+<li>masquer la complexite du protocole ISO 8583,</li>
+<li>fournir une interface HTTP simple a consommer,</li>
+<li>garantir la communication avec un hote TCP,</li>
+<li>rendre les echanges observables via un monitoring integre,</li>
+<li>rester extensible vers d'autres flux ou d'autres formats metier.</li>
+</ul>
+<h3 id="33-architecture-generale-proposee">3.3 Architecture generale proposee</h3>
+<p>L'architecture retenue repose sur une approche en couches afin de separer clairement les responsabilites. La couche controleur expose les endpoints REST et XML. La couche service orchestre la logique metier de traitement. La couche codec est chargee de convertir les objets applicatifs en messages ISO 8583 et inversement. La couche reseau gere le transport TCP/IP avec en-tete de longueur configurable. Enfin, un module transverse de monitoring collecte les metriques et les evenements.</p>
+<p><img alt="Figure 1 - Diagramme de cas d'utilisation" src="diagrams/figure1_use_case.svg" /></p>
+<p><em>Figure 1 - Diagramme de cas d'utilisation de la passerelle ISO 8583</em></p>
+<h3 id="34-choix-technologiques">3.4 Choix technologiques</h3>
+<p>Les choix technologiques ont ete faits en fonction de la nature du projet :</p>
+<table>
+<thead>
+<tr>
+<th>Composant</th>
+<th>Choix</th>
+<th>Motivation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backend</td>
+<td>Java 17</td>
+<td>Stabilité, ecosysteme mature, compatibilite entreprise</td>
+</tr>
+<tr>
+<td>Framework</td>
+<td>Spring Boot 3.2.3</td>
+<td>Rapidite de developpement et structuration web</td>
+</tr>
+<tr>
+<td>ISO engine</td>
+<td>jPOS 2.1.10</td>
+<td>Manipulation fiable des messages ISO 8583</td>
+</tr>
+<tr>
+<td>Frontend</td>
+<td>Angular 20</td>
+<td>Dashboard reactif et structure</td>
+</tr>
+<tr>
+<td>Documentation</td>
+<td>Springdoc OpenAPI</td>
+<td>Documentation automatique des endpoints</td>
+</tr>
+<tr>
+<td>Deploiement</td>
+<td>Docker / Compose</td>
+<td>Reproductibilite et isolation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="35-description-des-composants-principaux">3.5 Description des composants principaux</h3>
+<p>Les composants majeurs de la solution sont les suivants :</p>
+<ul>
+<li><code>Iso8583Controller</code> : expose les operations ISO 8583 cote HTTP,</li>
+<li><code>Iso8583GatewayService</code> : coordonne le traitement d'une transaction,</li>
+<li><code>Iso8583Codec</code> : transforme les modeles applicatifs en <code>ISOMsg</code>,</li>
+<li><code>Iso8583Channel</code> : dialogue avec le switch via TCP/IP,</li>
+<li><code>MonitoringService</code> : collecte les metriques et les evenements,</li>
+<li><code>PowerCardDirectDebitController</code> : traite le cas XML powerCARD,</li>
+<li><code>Iso8583MockSwitch</code> : simule un switch bancaire pour les tests.</li>
+</ul>
+<p><img alt="Figure 2 - Diagramme de composants" src="diagrams/figure2_component.svg" /></p>
+<p><em>Figure 2 - Diagramme de composants de la solution</em></p>
+<h3 id="36-diagramme-de-cas-dutilisation">3.6 Diagramme de cas d'utilisation</h3>
+<p>Le diagramme de cas d'utilisation montre les interactions principales entre les acteurs et la passerelle. Le client applicatif peut envoyer des transactions, consulter la configuration, lancer un echo test et superviser le comportement du systeme. Un switch bancaire ou un mock switch intervient comme acteur externe pour traiter les echanges ISO 8583. Cette vue fonctionnelle permet de situer le role exact de la passerelle dans l'ecosysteme du projet.</p>
+<h3 id="37-diagramme-de-composants">3.7 Diagramme de composants</h3>
+<p>Le diagramme de composants met en evidence la decomposition logicielle de la passerelle. Il montre le cheminement logique entre les controleurs, le service central, le codec, le canal reseau et le monitoring. Cette representation est utile pour justifier la separation des responsabilites et la modularite de la solution.</p>
+<h3 id="38-diagramme-de-sequence">3.8 Diagramme de sequence</h3>
+<p>Le diagramme de sequence detaille le deroulement d'une transaction. Il montre comment la requete est recue par le controleur, deleguee au service, convertie par le codec, envoyee via le canal reseau puis retournee au client sous forme d'une reponse applicative interpretable.</p>
+<p><img alt="Figure 3 - Diagramme de sequence" src="diagrams/figure3_sequence.svg" /></p>
+<p><em>Figure 3 - Diagramme de sequence d'une transaction ISO 8583</em></p>
+<h3 id="39-modelisation-des-donnees-iso-8583">3.9 Modelisation des donnees ISO 8583</h3>
+<p>Le modele de donnees a ete pense pour simplifier l'usage cote client. La classe <code>Iso8583Request</code> expose les principaux champs nommes comme <code>mti</code>, <code>pan</code>, <code>processingCode</code>, <code>amount</code>, <code>stan</code>, <code>terminalId</code>, <code>merchantId</code>, <code>currencyCode</code>, ainsi que deux mecanismes generiques pour gerer des champs additionnels. La classe <code>Iso8583Response</code> remonte les informations essentielles comme le MTI de reponse, le code <code>DE39</code>, la description fonctionnelle, le statut, les champs importants et le temps de traitement.</p>
+<p>La passerelle supporte explicitement plusieurs data elements essentiels du standard :</p>
+<table>
+<thead>
+<tr>
+<th>Champ applicatif</th>
+<th>Data Element ISO 8583</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pan</code></td>
+<td><code>DE2</code></td>
+</tr>
+<tr>
+<td><code>processingCode</code></td>
+<td><code>DE3</code></td>
+</tr>
+<tr>
+<td><code>amount</code></td>
+<td><code>DE4</code></td>
+</tr>
+<tr>
+<td><code>transmissionDateTime</code></td>
+<td><code>DE7</code></td>
+</tr>
+<tr>
+<td><code>stan</code></td>
+<td><code>DE11</code></td>
+</tr>
+<tr>
+<td><code>retrievalReferenceNumber</code></td>
+<td><code>DE37</code></td>
+</tr>
+<tr>
+<td><code>terminalId</code></td>
+<td><code>DE41</code></td>
+</tr>
+<tr>
+<td><code>merchantId</code></td>
+<td><code>DE42</code></td>
+</tr>
+<tr>
+<td><code>currencyCode</code></td>
+<td><code>DE49</code></td>
+</tr>
+<tr>
+<td><code>networkManagementCode</code></td>
+<td><code>DE70</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="310-conclusion">3.10 Conclusion</h3>
+<p>La conception retenue repond aux objectifs de modularite, de lisibilite et d'evolutivite fixes au depart. Les diagrammes produits permettent de visualiser les interactions, la decomposition des composants et le flux de traitement. Le chapitre suivant presente la mise en oeuvre technique de cette architecture.</p>
+<h2 id="chapitre-4-realisation-technique">Chapitre 4 : Realisation technique</h2>
+<h3 id="41-introduction">4.1 Introduction</h3>
+<p>La phase de realisation a transforme les choix de conception en composants concrets, deployables et testables. Elle couvre le backend Spring Boot, l'integration jPOS, le canal reseau, la facade XML, le monitoring, le dashboard et les outils de support comme le mock switch.</p>
+<h3 id="42-mise-en-place-du-projet-backend">4.2 Mise en place du projet backend</h3>
+<p>Le projet backend a ete initialise autour de Spring Boot 3.2.3 avec Java 17 et Maven. Cette base a permis d'organiser clairement la configuration, les dependances, les modeles, les services, les controleurs et la gestion des exceptions. La configuration applicative centralise les parametres reseau du switch, les timeouts, le port HTTP et les proprietes de logging.</p>
+<h3 id="43-developpement-du-controleur-rest">4.3 Developpement du controleur REST</h3>
+<p>Le controleur principal expose les routes <code>/api/iso8583/send</code>, <code>/authorize</code>, <code>/financial</code>, <code>/presentment</code>, <code>/reversal</code>, <code>/echo</code>, <code>/config</code>, <code>/health</code> et <code>/status</code>. Les endpoints de raccourci imposent automatiquement le MTI adapte au type d'operation. L'endpoint <code>echo</code> genere un message <code>0800</code> avec le code de gestion reseau <code>301</code> afin de verifier la connectivite avec le switch.</p>
+<p>Le tableau suivant resume les principales routes du projet.</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/iso8583/send</code></td>
+<td>Envoi libre d'un message ISO 8583</td>
+</tr>
+<tr>
+<td><code>/api/iso8583/authorize</code></td>
+<td>Autorisation <code>0100</code></td>
+</tr>
+<tr>
+<td><code>/api/iso8583/financial</code></td>
+<td>Transaction financiere <code>0200</code></td>
+</tr>
+<tr>
+<td><code>/api/iso8583/presentment</code></td>
+<td>Presentment <code>1200</code></td>
+</tr>
+<tr>
+<td><code>/api/iso8583/reversal</code></td>
+<td>Reversal <code>0400</code></td>
+</tr>
+<tr>
+<td><code>/api/iso8583/echo</code></td>
+<td>Test reseau <code>0800</code></td>
+</tr>
+<tr>
+<td><code>/api/powercard/direct-debit</code></td>
+<td>Facade XML metier</td>
+</tr>
+<tr>
+<td><code>/api/monitoring/*</code></td>
+<td>Exposition des metriques et evenements</td>
+</tr>
+</tbody>
+</table>
+<h3 id="44-developpement-du-service-de-traitement-iso-8583">4.4 Developpement du service de traitement ISO 8583</h3>
+<p>Le service <code>Iso8583GatewayService</code> orchestre l'ensemble du cycle de traitement. Il initialise le packager ISO, appelle le codec, realise le packing, echange les donnees avec le switch, puis unpacke la reponse et construit l'objet final. Ce service mesure egalement la duree de traitement et alimente le service de monitoring avec les informations de latence, de statut et de code reponse.</p>
+<h3 id="45-implementation-du-codec-jsonxml-vers-iso-8583">4.5 Implementation du codec JSON/XML vers ISO 8583</h3>
+<p>Le composant <code>Iso8583Codec</code> effectue le mapping entre les proprietes metier et les data elements ISO 8583. Par exemple, le <code>pan</code> correspond au <code>DE2</code>, le <code>processingCode</code> au <code>DE3</code>, le <code>amount</code> au <code>DE4</code>, le <code>transmissionDateTime</code> au <code>DE7</code>, le <code>stan</code> au <code>DE11</code>, le <code>retrievalReferenceNumber</code> au <code>DE37</code>, le <code>terminalId</code> au <code>DE41</code> et le <code>currencyCode</code> au <code>DE49</code>. Les donnees PIN et EMV sont traitees en hexadecimal puis converties en binaire si necessaire.</p>
+<h3 id="46-implementation-du-canal-tcpip">4.6 Implementation du canal TCP/IP</h3>
+<p>La communication avec le switch est assuree par <code>Iso8583Channel</code>. Cette classe etablit un socket TCP vers l'hote configure, ecrit un en-tete de longueur puis le payload ISO 8583. Elle lit ensuite la reponse en respectant le meme mecanisme de framing. Les timeouts de connexion et de lecture sont configurables, ce qui ameliore l'adaptabilite du systeme.</p>
+<h3 id="47-integration-de-jpos-et-du-packager-personnalise">4.7 Integration de jPOS et du packager personnalise</h3>
+<p>Le choix de jPOS permet d'eviter une implementation artisanale du protocole. Le fichier de packager personnalise decrit les champs ISO 8583 attendus, leurs longueurs et leurs formats. Cette approche facilite la maintenance du systeme et reduit le risque d'erreurs de packing ou d'unpacking.</p>
+<h3 id="48-developpement-de-la-facade-xml-powercard">4.8 Developpement de la facade XML powerCARD</h3>
+<p>Une facade XML a ete developpee via <code>PowerCardDirectDebitController</code> pour repondre a un cas d'usage specifique. Elle recoit un objet <code>DirectDebitTransferRequest</code>, le convertit en requete ISO <code>1200</code> a l'aide de <code>PowerCardDirectDebitMapper</code>, puis transforme la reponse obtenue en <code>DirectDebitTransferResponse</code>. Les comptes source et destination sont mappes respectivement vers <code>DE102</code> et <code>DE103</code>, tandis que le narratif est injecte dans <code>DE48</code>.</p>
+<h3 id="49-gestion-des-exceptions-et-des-statuts-http">4.9 Gestion des exceptions et des statuts HTTP</h3>
+<p>La solution normalise les erreurs applicatives et reseau via un handler global. Les erreurs de validation, les erreurs de contrainte, les exceptions generiques et les ressources introuvables sont converties en structures de reponse homogenes. En complement, les codes ISO 8583 sont traduits vers des statuts HTTP adaptes afin de simplifier l'exploitation cote client.</p>
+<h3 id="410-journalisation-et-tracabilite">4.10 Journalisation et tracabilite</h3>
+<p>Un intercepteur HTTP ajoute et propage le header <code>X-Request-ID</code>. Cela permet de tracer chaque requete de bout en bout dans les journaux applicatifs. Cette decision est importante dans un contexte de paiement, car elle facilite le diagnostic et la correlation entre appels entrants, transactions reseau et evenements de supervision.</p>
+<h3 id="411-developpement-du-module-de-monitoring">4.11 Developpement du module de monitoring</h3>
+<p>Le projet integre un module de supervision. <code>MonitoringService</code> enregistre les transactions traitees, calcule le volume total, le taux de succes, le nombre de refus, le nombre d'erreurs, la latence moyenne, le percentile P95, les valeurs minimales et maximales, ainsi que la frequence de transactions sur la derniere minute. Ces informations sont exposees via <code>MonitoringController</code> sous les routes <code>/api/monitoring/metrics</code>, <code>/events</code> et <code>/errors</code>.</p>
+<h3 id="412-developpement-du-dashboard-angular">4.12 Developpement du dashboard Angular</h3>
+<p>Pour la partie interface, un dashboard Angular 20 a ete developpe et embarque dans l'application backend. Accessible via <code>/dashboard/</code>, il interroge les endpoints de monitoring toutes les quatre secondes. Il affiche les indicateurs cles sous forme de cartes, de barres de latence, de repartitions par statut et de tableaux d'evenements recents.</p>
+<h3 id="413-conclusion">4.13 Conclusion</h3>
+<p>La phase de realisation a abouti a une solution complete, couvrant le backend, la conversion ISO 8583, la communication reseau, la facade metier, la journalisation, le monitoring et le dashboard. Le diagramme de deploiement suivant resume la maniere dont ces composants sont organises en execution.</p>
+<p><img alt="Figure 4 - Diagramme de deploiement" src="diagrams/figure4_deployment.svg" /></p>
+<p><em>Figure 4 - Diagramme de deploiement de la solution</em></p>
+<h2 id="chapitre-5-tests-validation-et-deploiement">Chapitre 5 : Tests, validation et deploiement</h2>
+<h3 id="51-introduction">5.1 Introduction</h3>
+<p>La valeur d'un gateway de paiement ne repose pas uniquement sur sa conception. Elle depend aussi de sa validation, de sa testabilite et de sa capacite a etre deploye dans un environnement stable. C'est pourquoi le projet a ete accompagne d'une strategie de test et d'un dispositif de deploiement simple a reproduire.</p>
+<h3 id="52-strategie-de-test">5.2 Strategie de test</h3>
+<p>La strategie retenue combine des tests unitaires, des tests d'integration et des validations manuelles. L'objectif est de verifier a la fois le comportement isole des composants critiques et la coherence globale du systeme lorsqu'il traite une transaction complete.</p>
+<h3 id="53-tests-unitaires">5.3 Tests unitaires</h3>
+<p>Le depot contient des tests pour le codec, le monitoring, l'intercepteur de journalisation et certains comportements du controleur. Ces tests permettent de valider le mapping des champs, la construction des reponses, la propagation du <code>X-Request-ID</code> et le calcul des metriques.</p>
+<h3 id="54-tests-dintegration">5.4 Tests d'integration</h3>
+<p>Les tests d'integration verifient la disponibilite des endpoints, les validations de payload, les erreurs de saisie et la facade XML powerCARD. Ils sont utiles pour confirmer que les differentes couches du systeme cooperent correctement.</p>
+<h3 id="55-validation-fonctionnelle">5.5 Validation fonctionnelle</h3>
+<p>La validation fonctionnelle s'appuie sur Swagger, sur une collection Postman et sur le dashboard de monitoring. Elle permet de confirmer que les principales routes attendues sont accessibles et que le comportement global de la solution est conforme au besoin.</p>
+<p>Le tableau ci-dessous resume la strategie retenue.</p>
+<table>
+<thead>
+<tr>
+<th>Type de validation</th>
+<th>Objectif</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tests unitaires</td>
+<td>Verifier le comportement des composants isoles</td>
+</tr>
+<tr>
+<td>Tests d'integration</td>
+<td>Verifier la cooperation entre les couches</td>
+</tr>
+<tr>
+<td>Validation manuelle</td>
+<td>Confirmer les flux via Swagger, Postman et dashboard</td>
+</tr>
+</tbody>
+</table>
+<h3 id="56-utilisation-du-mock-switch">5.6 Utilisation du mock switch</h3>
+<p>Le simulateur <code>Iso8583MockSwitch</code> joue un role majeur dans la validation locale. Il permet de simuler le comportement du switch, de renvoyer des reponses ISO 8583 et de tester la chaine complete sans dependre d'un environnement bancaire reel. Cette approche reduit la dependance externe et accelere les cycles de verification.</p>
+<h3 id="57-documentation-swagger-et-collection-postman">5.7 Documentation Swagger et collection Postman</h3>
+<p>La solution est documentee via Swagger/OpenAPI. Une collection Postman complete le dispositif en proposant plusieurs scenarios de test preconfigures. Cela rend l'appropriation du projet plus rapide et facilite la demonstration.</p>
+<h3 id="58-conteneurisation-avec-docker">5.8 Conteneurisation avec Docker</h3>
+<p>Sur le plan du deploiement, un <code>Dockerfile</code> multi-stage permet de construire puis d'executer l'application sous Temurin 17. Un fichier <code>docker-compose.yml</code> orchestre le lancement du gateway et du mock switch dans deux conteneurs distincts. Cette configuration facilite la reproductibilite des environnements et prepare la solution a une integration plus industrialisee.</p>
+<h3 id="59-limites-observees">5.9 Limites observees</h3>
+<p>Malgre les resultats obtenus, certaines limites demeurent :</p>
+<ul>
+<li>le monitoring reste en memoire,</li>
+<li>le canal TCP est synchrone,</li>
+<li>la securisation des APIs n'est pas encore mise en place,</li>
+<li>la validation de certains champs peut etre percue comme rigide,</li>
+<li>le compose doit etre verifie si l'on souhaite exposer le mock switch vers l'exterieur.</li>
+</ul>
+<h3 id="510-conclusion">5.10 Conclusion</h3>
+<p>La phase de test et de validation confirme que la solution remplit ses objectifs principaux : conversion, transport, supervision, simulation et documentation. Le deploiement conteneurise renforce encore la valeur du projet en le rendant plus simple a reproduire et a presenter.</p>
+<h2 id="chapitre-6-bilan-et-perspectives">Chapitre 6 : Bilan et perspectives</h2>
+<h3 id="61-bilan-technique">6.1 Bilan technique</h3>
+<p>Le projet aboutit a une passerelle complete, documentee et testable. Les objectifs initiaux de conversion, de transport, de supervision et de simulation ont ete atteints. Le resultat final constitue une base solide pour des integrations monetiques modernes autour d'un protocole historiquement complexe.</p>
+<h3 id="62-competences-acquises">6.2 Competences acquises</h3>
+<p>Ce travail m'a permis de consolider mes competences en :</p>
+<ul>
+<li>developpement backend avec Spring Boot,</li>
+<li>manipulation de protocoles financiers,</li>
+<li>integration d'une bibliotheque specialisee comme jPOS,</li>
+<li>communication TCP/IP,</li>
+<li>mise en place de monitoring applicatif,</li>
+<li>deploiement via Docker,</li>
+<li>structuration d'une architecture logicielle modulaire.</li>
+</ul>
+<h3 id="63-difficultes-rencontrees">6.3 Difficultes rencontrees</h3>
+<p>Les principales difficultes rencontrees ont concerne :</p>
+<ul>
+<li>la comprehension du format ISO 8583 et de ses data elements,</li>
+<li>la gestion correcte du framing reseau,</li>
+<li>l'interpretation des codes de reponse,</li>
+<li>la necessite de tester sans infrastructure bancaire reelle,</li>
+<li>la mise en place d'un rendu de supervision lisible et utile.</li>
+</ul>
+<h3 id="64-solutions-apportees">6.4 Solutions apportees</h3>
+<p>Pour depasser ces difficultes, plusieurs solutions ont ete retenues :</p>
+<ul>
+<li>utilisation de jPOS pour fiabiliser le mapping et le packing,</li>
+<li>creation d'un mock switch pour les validations locales,</li>
+<li>mise en place d'un monitoring centre sur la latence et les erreurs,</li>
+<li>structuration claire du projet en couches distinctes.</li>
+</ul>
+<h3 id="65-limites-du-systeme-actuel">6.5 Limites du systeme actuel</h3>
+<p>Le projet presente toutefois certaines limites. Le monitoring est actuellement stocke uniquement en memoire, ce qui ne permet pas la persistance des evenements ni l'analyse historique avancee. Le canal reseau est synchrone et ouvre un socket pour chaque echange, ce qui simplifie l'implementation mais peut limiter les performances a plus grande echelle. Les mecanismes de securite, tels que l'authentification, l'autorisation et le controle de debit, ne sont pas encore integres.</p>
+<h3 id="66-perspectives-damelioration">6.6 Perspectives d'amelioration</h3>
+<p>Parmi les perspectives d'amelioration, il serait pertinent d'ajouter un stockage persistant des evenements de monitoring, une exportation vers Prometheus ou Grafana, des mecanismes de resilience comme un circuit breaker, une meilleure securisation des endpoints, ainsi qu'une optimisation du canal TCP a travers du pooling ou des connexions persistantes. Une integration avec un switch bancaire reel en environnement de preproduction constituerait egalement une etape importante pour faire evoluer cette solution vers un usage plus industriel.</p>
+<h3 id="67-conclusion">6.7 Conclusion</h3>
+<p>Ce bilan montre que le projet a une valeur immediate pour la comprehension et la modernisation des echanges monetiques. Il met egalement en evidence des perspectives credibles d'industrialisation et d'amelioration progressive.</p>
+<h2 id="conclusion-generale">Conclusion generale</h2>
+<p>Le projet realise au sein de Hightech Payment Systems a permis de concevoir et developper une passerelle ISO 8583 complete, capable de relier des applications modernes a des systemes monetiques historiques. La solution obtenue assure la conversion des messages, la communication reseau avec un switch, la gestion des reponses, la supervision du trafic et la simulation d'un hote bancaire. Elle demontre qu'il est possible de moderniser l'acces aux services de paiement sans remettre en cause l'existant, en s'appuyant sur une architecture claire, modulaire et documentee.</p>
+<p>Ce stage a constitue une experience tres enrichissante sur les plans technique, methodologique et metier. Il m'a permis d'appliquer mes connaissances en developpement logiciel, en integration applicative et en architecture de systemes dans un domaine exigeant et concret. Ce projet represente ainsi une contribution utile a la modernisation des echanges monetiques, tout en constituant une etape importante dans mon parcours academique et professionnel.</p>
+<h2 id="bibliographie">Bibliographie</h2>
+<ul>
+<li>Documentation officielle Spring Boot 3.2.x</li>
+<li>Documentation officielle jPOS</li>
+<li>Documentation officielle Angular 20</li>
+<li>Documentation Springdoc OpenAPI</li>
+<li>Documentation Docker et Docker Compose</li>
+<li>Standard ISO 8583:1987</li>
+<li>Ressources techniques internes liees aux systemes de paiement et aux switchs monetiques</li>
+</ul>
+<h2 id="annexes">Annexes</h2>
+<h3 id="annexe-a-exemples-de-routes-principales">Annexe A : Exemples de routes principales</h3>
+<ul>
+<li><code>/api/iso8583/send</code></li>
+<li><code>/api/iso8583/authorize</code></li>
+<li><code>/api/iso8583/financial</code></li>
+<li><code>/api/iso8583/reversal</code></li>
+<li><code>/api/iso8583/echo</code></li>
+<li><code>/api/powercard/direct-debit</code></li>
+<li><code>/api/monitoring/metrics</code></li>
+</ul>
+<h3 id="annexe-b-exemple-de-requete-json">Annexe B : Exemple de requete JSON</h3>
+<pre><code class="language-json">{
+  &quot;mti&quot;: &quot;0200&quot;,
+  &quot;transactionRef&quot;: &quot;ATM-20260327-0001&quot;,
+  &quot;fields&quot;: {
+    &quot;2&quot;: &quot;4111111111111111&quot;,
+    &quot;3&quot;: &quot;000000&quot;,
+    &quot;4&quot;: &quot;000000010000&quot;,
+    &quot;7&quot;: &quot;0327120000&quot;,
+    &quot;11&quot;: &quot;123456&quot;,
+    &quot;41&quot;: &quot;ATM00001&quot;,
+    &quot;49&quot;: &quot;504&quot;
+  }
+}
+</code></pre>
+<h3 id="annexe-c-exemple-de-requete-xml-powercard">Annexe C : Exemple de requete XML powerCARD</h3>
+<pre><code class="language-xml">&lt;DirectDebitTransferRequest&gt;
+  &lt;transactionRef&gt;DDR-0001&lt;/transactionRef&gt;
+  &lt;processingCode&gt;400000&lt;/processingCode&gt;
+  &lt;amount&gt;000000010000&lt;/amount&gt;
+  &lt;currencyCode&gt;978&lt;/currencyCode&gt;
+  &lt;sourceAccount&gt;SRC000123&lt;/sourceAccount&gt;
+  &lt;destinationAccount&gt;DST000456&lt;/destinationAccount&gt;
+  &lt;narrative&gt;Payroll transfer&lt;/narrative&gt;
+&lt;/DirectDebitTransferRequest&gt;
+</code></pre>
+    </main>
+  </body>
+</html>

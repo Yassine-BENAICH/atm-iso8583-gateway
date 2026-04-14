@@ -16,7 +16,7 @@ class RequestLoggingInterceptorTest {
     private final RequestLoggingInterceptor interceptor = new RequestLoggingInterceptor();
 
     @Test
-    void preHandleShouldReuseExistingRequestIdHeader() throws Exception {
+    void preHandleShouldReuseExistingRequestIdHeader() {
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/iso8583/health");
         request.setRemoteAddr("127.0.0.1");
         request.addHeader("X-Request-ID", "REQ-123");
@@ -31,7 +31,7 @@ class RequestLoggingInterceptorTest {
     }
 
     @Test
-    void preHandleShouldGenerateRequestIdWhenHeaderIsMissing() throws Exception {
+    void preHandleShouldGenerateRequestIdWhenHeaderIsMissing() {
         MockHttpServletRequest request = new MockHttpServletRequest("POST", "/api/iso8583/send");
         request.setRemoteAddr("127.0.0.1");
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -57,7 +57,7 @@ class RequestLoggingInterceptorTest {
     }
 
     @Test
-    void afterCompletionShouldNotThrowWhenExceptionIsProvided() throws Exception {
+    void afterCompletionShouldNotThrowWhenExceptionIsProvided() {
         MockHttpServletRequest request = new MockHttpServletRequest("POST", "/api/iso8583/send");
         request.setRemoteAddr("127.0.0.1");
         MockHttpServletResponse response = new MockHttpServletResponse();

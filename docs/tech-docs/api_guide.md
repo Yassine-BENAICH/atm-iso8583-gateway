@@ -2,19 +2,19 @@
 
 The ISO 8583 Gateway exposes a RESTful interface to perform traditional financial transactions via modern JSON objects.
 
-## 🔗 Endpoint Summary
+## Endpoint Summary
 
-| Endpoint | Method | MTI Mode | Description |
-| :--- | :--- | :--- | :--- |
-| `/api/iso8583/send` | `POST` | Generic | Sends any custom MTI payload. |
-| `/api/iso8583/authorize` | `POST` | `0100` | Authorization Request. |
-| `/api/iso8583/financial` | `POST` | `0200` | Financial Transaction Request. |
-| `/api/iso8583/reversal` | `POST` | `0400` | Reversal Request. |
-| `/api/iso8583/echo` | `POST` | `0800` | Network Echo Test (301). |
+| Endpoint                 | Method | MTI Mode | Description                    |
+|:-------------------------|:-------|:---------|:-------------------------------|
+| `/api/iso8583/send`      | `POST` | Generic  | Sends any custom MTI payload.  |
+| `/api/iso8583/authorize` | `POST` | `0100`   | Authorization Request.         |
+| `/api/iso8583/financial` | `POST` | `0200`   | Financial Transaction Request. |
+| `/api/iso8583/reversal`  | `POST` | `0400`   | Reversal Request.              |
+| `/api/iso8583/echo`      | `POST` | `0800`   | Network Echo Test (301).       |
 
 ---
 
-## 🔄 Transaction Flow
+## Transaction Flow
 
 The following diagram shows the end-to-end lifecycle of a REST API request as it travels through the gateway:
 
@@ -35,7 +35,7 @@ sequenceDiagram
 
 ---
 
-## 🏗 Common Fields
+## Common Fields
 
 | Field | JSON Property | Type | Description |
 | :--- | :--- | :--- | :--- |
@@ -46,15 +46,16 @@ sequenceDiagram
 | **DE 11** | `stan` | `String` | Systems Trace Audit Number (6 digits). |
 | **DE 37** | `retrievalReferenceNumber`| `String` | RRN (12 chars). |
 | **DE 41** | `terminalId` | `String` | Card Acceptor Terminal ID (8 chars). |
-| **DE 49** | `currencyCode` | `String` | Numeric ISO currency code (e.g., `978` for EUR). |
+| **DE 49** | `currencyCode` | `String` | Numeric ISO currency code (e.g., `504` for MAD). |
 
 ---
 
-## 📦 Examples
+## Examples
 
 ### 1. Authorization Request (0100)
 
 **Request Body:**
+
 ```json
 {
   "mti": "0100",
@@ -79,6 +80,7 @@ sequenceDiagram
 ```
 
 **Response Body:**
+
 ```json
 {
   "status": "SUCCESS",
@@ -103,6 +105,7 @@ sequenceDiagram
 ### 2. Network Echo (0800)
 
 **Request Body:**
+
 ```json
 {
   "mti": "0800",
@@ -115,11 +118,11 @@ sequenceDiagram
 
 ---
 
-## 🔴 Error Handling
+## Error Handling
 
 The gateway returns different HTTP statuses depending on the communication outcome:
 
-*   `200 OK`: Successful communication with the switch (even for "Declined" transactions).
-*   `400 Bad Request`: JSON validation errors.
-*   `503 Service Unavailable`: Switch is offline or refused connection.
-*   `504 Gateway Timeout`: The switch did not respond within the configured timeout.
+* `200 OK`: Successful communication with the switch (even for "Declined" transactions).
+* `400 Bad Request`: JSON validation errors.
+* `503 Service Unavailable`: Switch is offline or refused connection.
+* `504 Gateway Timeout`: The switch did not respond within the configured timeout.

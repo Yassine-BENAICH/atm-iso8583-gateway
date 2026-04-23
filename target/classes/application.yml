@@ -16,18 +16,21 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     properties:
       hibernate:
         '[format_sql]': true
         '[jdbc.batch_size]': 20
         '[jdbc.fetch_size]': 50
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
 
 # ISO 8583 Network Connection Configuration
 iso8583:
   host: 127.0.0.1          # Target host (PowerCARD / switch)
-  port: 9002                # Target port
-  connect-timeout: 5000     # ms
+  port: 9000                # Target port
+  connect-timeout: 8080     # ms
   read-timeout: 30000       # ms
   header-length: 4          # bytes used for message length prefix
   institution-id: "000001"  # Institution identifier

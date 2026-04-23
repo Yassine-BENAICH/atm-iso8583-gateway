@@ -25,14 +25,17 @@ public class Iso8583GatewayService {
     private final Iso8583Codec codec;
     private final PowerCardClient powerCardClient;
     private final MonitoringService monitoringService;
+    private final TransactionService transactionService;
     private final GenericPackager packager;
 
     public Iso8583GatewayService(Iso8583Codec codec,
             PowerCardClient powerCardClient,
-            MonitoringService monitoringService) throws ISOException {
+            MonitoringService monitoringService,
+            TransactionService transactionService) throws ISOException {
         this.codec = codec;
         this.powerCardClient = powerCardClient;
         this.monitoringService = monitoringService;
+        this.transactionService = transactionService;
 
         InputStream packagerXml = getClass().getClassLoader().getResourceAsStream("packager/custom_iso87.xml");
         if (packagerXml == null) {
@@ -78,6 +81,7 @@ public class Iso8583GatewayService {
             }
             response.setProcessingTimeMs(elapsed);
             monitoringService.recordTransaction(request, response, elapsed);
+            transactionService.saveTransaction(request, response);
             log.info("Transaction finalized | outcome={} RC={} elapsed={}ms",
                     response.getStatus(), response.getResponseCode(), elapsed);
         }

@@ -140,7 +140,7 @@ Currently defined fields:
 mvn test
 ```
 
-## Notes / Limitations
+## Notes 
 
 - No authentication/authorization yet.
 - Packager and supported fields are intentionally minimal (expand `iso8583-packager.xml` as needed).

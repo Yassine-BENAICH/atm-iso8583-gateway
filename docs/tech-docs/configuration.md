@@ -19,8 +19,8 @@ The network configuration determines how the gateway connects to the target host
 
 The gateway uses an XML-based jPOS packager configuration.
 
-*   **File Location**: `src/main/resources/packager/custom_iso87.xml`
-*   **Purpose**: Defines the length and data type of each ISO 8583 field (e.g., LLLVAR, NUMERIC, etc.).
+* **File Location**: `src/main/resources/packager/custom_iso87.xml`
+* **Purpose**: Defines the length and data type of each ISO 8583 field (e.g., LLLVAR, NUMERIC, etc.).
 
 ## Environment Overrides
 
@@ -39,8 +39,8 @@ mvn spring-boot:run
 
 By default, the application logs critical events and transaction summaries.
 
-*   **Default Log Level**: `INFO`
-*   **Package Logs**: `com.atm` is set to `DEBUG` for detailed message mapping logs.
-*   **Log File**: `logs/iso8583-gateway.log`
+* **Default Log Level**: `INFO`
+* **Package Logs**: `com.atm` is set to `DEBUG` for detailed message mapping logs.
+* **Log File**: `logs/iso8583-gateway.log`
 
 To change the log level, update the `logging.level` section in `application.yml`.

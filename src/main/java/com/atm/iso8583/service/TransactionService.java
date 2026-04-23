@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -25,18 +26,20 @@ public class TransactionService {
     @Transactional
     public Transaction saveTransaction(Iso8583Request request, Iso8583Response response) {
         Transaction transaction = Transaction.builder()
-            .transactionRef(request.getTransactionRef())
-            .mti(request.getMti())
-            .requestFields(objectMapper.valueToTree(request.getFields()))
-            .responseFields(objectMapper.valueToTree(response.getAdditionalFields()))
-            .responseCode(response.getResponseCode())
-            .responseDescription(response.getResponseDescription())
-            .processingTimeMs(response.getProcessingTimeMs())
-            .status(response.getStatus())
-            .errorMessage(response.getErrorMessage())
-            .build();
+                .transactionRef(request.getTransactionRef())
+                .mti(request.getMti())
+                .requestFields(objectMapper.valueToTree(request.getFields()))
+                .responseFields(response.getAdditionalFields() != null
+                        ? objectMapper.valueToTree(response.getAdditionalFields())
+                        : null)
+                .responseCode(response.getResponseCode())
+                .responseDescription(response.getResponseDescription())
+                .processingTimeMs(response.getProcessingTimeMs())
+                .status(response.getStatus())
+                .errorMessage(response.getErrorMessage())
+                .build();
 
-        return transactionRepository.save(transaction);
+        return transactionRepository.save(Objects.requireNonNull(transaction));
     }
 
     @Transactional(readOnly = true)

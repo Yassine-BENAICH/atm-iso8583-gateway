@@ -2,6 +2,7 @@ package com.atm.iso8583.service;
 
 import com.atm.iso8583.model.Iso8583Response;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.Locale;
@@ -9,6 +10,7 @@ import java.util.Locale;
 @Component
 public class Iso8583ResponseStatusResolver {
 
+    @NonNull
     public HttpStatus resolve(Iso8583Response response) {
         if (response == null) {
             return HttpStatus.INTERNAL_SERVER_ERROR;

@@ -1,0 +1,20 @@
+name: ISO8583 Gateway
+values:
+  - key: base_url
+    value: http://localhost:8080
+    enabled: true
+  - key: api_path
+    value: /api
+    enabled: true
+  - key: iso8583_host
+    value: localhost
+    enabled: true
+  - key: iso8583_port
+    value: "9000"
+    enabled: true
+  - key: switch_host
+    value: localhost
+    enabled: true
+  - key: switch_port
+    value: "9002"
+    enabled: true

@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Objects;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/powercard")
@@ -31,40 +33,33 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "powerCARD Direct Debit", description = "XML facade for powerCARD direct debit transfer messages")
 public class PowerCardDirectDebitController {
 
-    private final Iso8583GatewayService gatewayService;
-    private final PowerCardDirectDebitMapper mapper;
-    private final Iso8583ResponseStatusResolver statusResolver;
+        private final Iso8583GatewayService gatewayService;
+        private final PowerCardDirectDebitMapper mapper;
+        private final Iso8583ResponseStatusResolver statusResolver;
 
-    @PostMapping(value = "/direct-debit",
-            consumes = MediaType.APPLICATION_XML_VALUE,
-            produces = MediaType.APPLICATION_XML_VALUE)
-    @Operation(
-            summary = "Submit a direct debit transfer to powerCARD",
-            description = "Accepts XML, maps it to ISO 8583 MTI 1200, forwards it to powerCARD, and returns XML."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Direct debit accepted by the host",
-                    content = @Content(schema = @Schema(implementation = DirectDebitTransferResponse.class))
-            ),
-            @ApiResponse(responseCode = "400", description = "Invalid XML payload"),
-            @ApiResponse(responseCode = "503", description = "powerCARD host unavailable")
-    })
-    public ResponseEntity<DirectDebitTransferResponse> directDebit(
-            @Valid @RequestBody DirectDebitTransferRequest request,
-            @RequestHeader(value = "X-Request-ID", required = false) String requestId) {
+        @PostMapping(value = "/direct-debit", consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_XML_VALUE)
+        @Operation(summary = "Submit a direct debit transfer to powerCARD", description = "Accepts XML, maps it to ISO 8583 MTI 1200, forwards it to powerCARD, and returns XML.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Direct debit accepted by the host", content = @Content(schema = @Schema(implementation = DirectDebitTransferResponse.class))),
+                        @ApiResponse(responseCode = "400", description = "Invalid XML payload"),
+                        @ApiResponse(responseCode = "503", description = "powerCARD host unavailable")
+        })
+        public ResponseEntity<DirectDebitTransferResponse> directDebit(
+                        @Valid @RequestBody DirectDebitTransferRequest request,
+                        @RequestHeader(value = "X-Request-ID", required = false) String requestId) {
 
-        log.info("Received powerCARD direct debit request | RequestID={} Ref={}",
-                requestId, request.getTransactionRef());
+                log.info("Received powerCARD direct debit request | RequestID={} Ref={}",
+                                requestId, request.getTransactionRef());
 
-        Iso8583Request isoRequest = mapper.toIsoRequest(request);
-        Iso8583Response isoResponse = gatewayService.processTransaction(isoRequest);
-        DirectDebitTransferResponse response = mapper.toXmlResponse(request, isoResponse);
+                Iso8583Request isoRequest = mapper.toIsoRequest(request);
+                Iso8583Response isoResponse = gatewayService.processTransaction(isoRequest);
+                DirectDebitTransferResponse response = mapper.toXmlResponse(request, isoResponse);
 
-        log.info("Completed powerCARD direct debit request | RequestID={} Ref={} RC={} Status={}",
-                requestId, request.getTransactionRef(), response.getResponseCode(), response.getStatus());
+                log.info("Completed powerCARD direct debit request | RequestID={} Ref={} RC={} Status={}",
+                                requestId, request.getTransactionRef(), response.getResponseCode(),
+                                response.getStatus());
 
-        return ResponseEntity.status(statusResolver.resolve(isoResponse)).body(response);
-    }
+                return ResponseEntity.status(Objects.requireNonNull(statusResolver.resolve(isoResponse)))
+                                .body(response);
+        }
 }

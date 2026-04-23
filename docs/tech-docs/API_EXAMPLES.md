@@ -5,6 +5,7 @@
 ### Example 1: Balance Inquiry (MTI 0200)
 
 **Request:**
+
 ```bash
 curl -X POST http://localhost:8080/api/iso8583/send \
   -H "Content-Type: application/json" \
@@ -27,6 +28,7 @@ curl -X POST http://localhost:8080/api/iso8583/send \
 ```
 
 **Response (Success - 200 OK):**
+
 ```json
 {
   "mti": "0210",
@@ -54,6 +56,7 @@ curl -X POST http://localhost:8080/api/iso8583/send \
 ### Example 2: Cash Withdrawal (MTI 0200)
 
 **Request:**
+
 ```bash
 curl -X POST http://localhost:8080/api/iso8583/send \
   -H "Content-Type: application/json" \
@@ -77,6 +80,7 @@ curl -X POST http://localhost:8080/api/iso8583/send \
 ```
 
 **Response (Success - 200 OK):**
+
 ```json
 {
   "mti": "0210",
@@ -105,6 +109,7 @@ curl -X POST http://localhost:8080/api/iso8583/send \
 ### Example 3: Insufficient Funds (MTI 0200)
 
 **Response (Payment Required - 402):**
+
 ```json
 {
   "mti": "0210",
@@ -126,6 +131,7 @@ curl -X POST http://localhost:8080/api/iso8583/send \
 ### Example 4: Validation Error
 
 **Request (Invalid MTI):**
+
 ```bash
 curl -X POST http://localhost:8080/api/iso8583/send \
   -H "Content-Type: application/json" \
@@ -138,6 +144,7 @@ curl -X POST http://localhost:8080/api/iso8583/send \
 ```
 
 **Response (Bad Request - 400):**
+
 ```json
 {
   "errorCode": "VALIDATION_ERROR",
@@ -153,6 +160,7 @@ curl -X POST http://localhost:8080/api/iso8583/send \
 ### Example 5: Missing Required Fields
 
 **Request:**
+
 ```bash
 curl -X POST http://localhost:8080/api/iso8583/send \
   -H "Content-Type: application/json" \
@@ -162,6 +170,7 @@ curl -X POST http://localhost:8080/api/iso8583/send \
 ```
 
 **Response (Bad Request - 400):**
+
 ```json
 {
   "errorCode": "VALIDATION_ERROR",
@@ -177,11 +186,13 @@ curl -X POST http://localhost:8080/api/iso8583/send \
 ## GET /api/iso8583/health
 
 **Request:**
+
 ```bash
 curl -X GET http://localhost:8080/api/iso8583/health
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "status": "UP",
@@ -193,11 +204,13 @@ curl -X GET http://localhost:8080/api/iso8583/health
 ## GET /api/iso8583/status
 
 **Request:**
+
 ```bash
 curl -X GET http://localhost:8080/api/iso8583/status
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "status": "ACTIVE",
@@ -209,7 +222,7 @@ curl -X GET http://localhost:8080/api/iso8583/status
 ## ISO 8583 Field Reference
 
 | Field | Name | Description | Example |
-|-------|------|-------------|---------|
+|-------|------|-------------|---------:|
 | 0 | MTI | Message Type Indicator | 0200, 0210 |
 | 2 | PAN | Primary Account Number | 4111111111111111 |
 | 3 | Processing Code | Transaction type | 000000 (purchase), 310000 (balance) |
@@ -244,13 +257,13 @@ curl -X GET http://localhost:8080/api/iso8583/status
 ## Request Headers
 
 | Header | Required | Description | Example |
-|--------|----------|-------------|---------|
+|--------|----------|-------------|---------:|
 | Content-Type | Yes | Request content type | application/json |
 | X-Request-ID | No | Unique request identifier (auto-generated if not provided) | REQ-12345 |
 
 ## Response Headers
 
 | Header | Description | Example |
-|--------|-------------|---------|
+|--------|-------------|---------:|
 | Content-Type | Response content type | application/json |
 | X-Request-ID | Request identifier (echoed or generated) | REQ-12345 |

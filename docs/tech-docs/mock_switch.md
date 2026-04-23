@@ -7,10 +7,11 @@ The ISO 8583 Gateway project includes a built-in **Mock Switch** to simulate a r
 The Mock Switch is a simple TCP server that listens for ISO 8583 messages and responds based on the MTI and processing code.
 
 ### Features
-*   **0800 (Network management)**: Echoes back the STAN and NMC 301.
-*   **0100 (Authorization)**: Approves any transaction (Response Code 00).
-*   **0200 (Financial)**: Approves any financial transaction (Response Code 00).
-*   **MTI Header Handling**: Automatically adds the 4-byte length header required by some legacy systems.
+
+* **0800 (Network management)**: Echoes back the STAN and NMC 301.
+* **0100 (Authorization)**: Approves any transaction (Response Code 00).
+* **0200 (Financial)**: Approves any financial transaction (Response Code 00).
+* **MTI Header Handling**: Automatically adds the 4-byte length header required by some legacy systems.
 
 ### Processing Logic
 
@@ -62,12 +63,15 @@ By default, the switch listens on **Port 9000**.
 Once both the **Gateway Application** and the **Mock Switch** are running, you can perform the following tests using the Gateway Dashboard (`http://localhost:8080/index.html`) or Swagger UI:
 
 ### 1. Simple Connectivity Test (Echo)
-*   **Endpoint**: `POST /api/iso8583/echo`
-*   **Expected Description**: "Approved" (Response Code 00).
+
+* **Endpoint**: `POST /api/iso8583/echo`
+* **Expected Description**: "Approved" (Response Code 00).
 
 ### 2. Basic Authorization
-*   **Endpoint**: `POST /api/iso8583/authorize`
-*   **JSON Payload**:
+
+* **Endpoint**: `POST /api/iso8583/authorize`
+* **JSON Payload**:
+
     ```json
     {
       "mti": "0100",
@@ -78,8 +82,9 @@ Once both the **Gateway Application** and the **Mock Switch** are running, you c
       "terminalId": "TERM0001"
     }
     ```
-*   **Expected MTI**: `0110`
-*   **Expected Auth Code**: `AUTH01`
+
+* **Expected MTI**: `0110`
+* **Expected Auth Code**: `AUTH01`
 
 ---
 

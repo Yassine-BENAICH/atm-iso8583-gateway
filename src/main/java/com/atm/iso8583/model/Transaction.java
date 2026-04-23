@@ -33,11 +33,11 @@ public class Transaction {
     @Column(name = "mti", length = 4, nullable = false)
     private String mti;
 
-    @Column(name = "request_fields", columnDefinition = "jsonb")
+    @Column(name = "request_fields", columnDefinition = "CLOB")
     @JdbcTypeCode(SqlTypes.JSON)
     private JsonNode requestFields;
 
-    @Column(name = "response_fields", columnDefinition = "jsonb")
+    @Column(name = "response_fields", columnDefinition = "CLOB")
     @JdbcTypeCode(SqlTypes.JSON)
     private JsonNode responseFields;
 

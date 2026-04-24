@@ -1,0 +1,21 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+
+actor "API Client\n(Postman / ATM Middleware)" as Client
+actor "Payment Switch" as Switch
+actor "Mock Switch\n(Dev/Test)" as Mock
+
+rectangle "ATM ISO 8583 Gateway" as Gateway {
+  usecase "Health Check" as UC_Health
+  usecase "Send Transaction\n(JSON -> ISO 8583)" as UC_Send
+}
+
+Client --> UC_Health
+Client --> UC_Send
+
+UC_Send --> Switch : TCP ISO 8583
+Mock -|> Switch
+
+@enduml
+

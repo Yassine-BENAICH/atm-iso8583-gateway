@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760">
+  <defs>
+    <style>
+      .title { font: 700 26px Arial, sans-serif; fill: #113b62; }
+      .label { font: 16px Arial, sans-serif; fill: #1f2937; }
+      .small { font: 14px Arial, sans-serif; fill: #4b5563; }
+      .node { fill: #ffffff; stroke: #0f4c81; stroke-width: 2; rx: 16; }
+      .group { fill: #f7fbff; stroke: #9eb8cf; stroke-width: 2; rx: 18; }
+      .line { stroke: #475569; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <text x="600" y="42" text-anchor="middle" class="title">Figure 2 - Diagramme de composants</text>
+
+  <rect x="170" y="90" width="860" height="560" class="group"/>
+  <text x="600" y="122" text-anchor="middle" class="label">Passerelle Spring Boot</text>
+
+  <rect x="70" y="210" width="220" height="90" class="node"/>
+  <text x="180" y="250" text-anchor="middle" class="label">Client API / Dashboard</text>
+  <text x="180" y="278" text-anchor="middle" class="small">HTTP JSON / XML</text>
+
+  <rect x="340" y="170" width="220" height="90" class="node"/>
+  <text x="450" y="210" text-anchor="middle" class="label">Iso8583Controller</text>
+  <text x="450" y="238" text-anchor="middle" class="small">MonitoringController</text>
+
+  <rect x="340" y="320" width="220" height="90" class="node"/>
+  <text x="450" y="360" text-anchor="middle" class="label">Iso8583GatewayService</text>
+  <text x="450" y="388" text-anchor="middle" class="small">ResponseStatusResolver</text>
+
+  <rect x="630" y="140" width="220" height="90" class="node"/>
+  <text x="740" y="180" text-anchor="middle" class="label">Iso8583Codec</text>
+  <text x="740" y="208" text-anchor="middle" class="small">JSON/XML ↔ ISO 8583</text>
+
+  <rect x="630" y="280" width="220" height="90" class="node"/>
+  <text x="740" y="320" text-anchor="middle" class="label">Iso8583Channel</text>
+  <text x="740" y="348" text-anchor="middle" class="small">TCP/IP + header length</text>
+
+  <rect x="630" y="420" width="220" height="90" class="node"/>
+  <text x="740" y="460" text-anchor="middle" class="label">MonitoringService</text>
+  <text x="740" y="488" text-anchor="middle" class="small">Metrics + recent events</text>
+
+  <rect x="900" y="280" width="220" height="90" class="node"/>
+  <text x="1010" y="320" text-anchor="middle" class="label">Switch / Mock Switch</text>
+  <text x="1010" y="348" text-anchor="middle" class="small">ISO 8583 over TCP</text>
+
+  <path d="M290,255 C310,255 320,215 340,215" class="line"/>
+  <path d="M450,260 L450,320" class="line"/>
+  <path d="M560,355 C595,355 595,185 630,185" class="line"/>
+  <path d="M560,365 C595,365 595,325 630,325" class="line"/>
+  <path d="M560,375 C595,375 595,465 630,465" class="line"/>
+  <path d="M850,325 L900,325" class="line"/>
+</svg>

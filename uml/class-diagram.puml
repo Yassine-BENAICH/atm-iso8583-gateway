@@ -1,0 +1,100 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+
+package "com.atm.iso8583.controller" {
+  class Iso8583Controller <<RestController>> {
+    - gatewayService: Iso8583GatewayService
+    + sendMessage(request: Iso8583Request): ResponseEntity<Iso8583Response>
+    + health(): ResponseEntity<String>
+  }
+}
+
+package "com.atm.iso8583.service" {
+  class Iso8583GatewayService <<Service>> {
+    - codec: Iso8583Codec
+    - channel: Iso8583Channel
+    + processTransaction(request: Iso8583Request): Iso8583Response
+  }
+}
+
+package "com.atm.iso8583.codec" {
+  class Iso8583Codec <<Component>> {
+    - packager: GenericPackager
+    + jsonToIso(request: Iso8583Request): ISOMsg
+    + isoToJson(isoMsg: ISOMsg): Iso8583Response
+  }
+}
+
+package "com.atm.iso8583.channel" {
+  class Iso8583Channel <<Component>> {
+    - host: String
+    - port: int
+    - timeout: int
+    + sendAndReceive(request: ISOMsg): ISOMsg
+  }
+}
+
+package "com.atm.iso8583.model" {
+  class Iso8583Request {
+    - mti: String
+    - fields: Map<String,String>
+  }
+  class Iso8583Response {
+    - mti: String
+    - fields: Map<String,String>
+    - responseCode: String
+    - message: String
+  }
+}
+
+package "com.atm.iso8583.exception" {
+  class Iso8583Exception <<RuntimeException>>
+  class GlobalExceptionHandler <<RestControllerAdvice>> {
+    + handleIso8583Exception(ex: Iso8583Exception): ResponseEntity<Map<String,String>>
+    + handleGenericException(ex: Exception): ResponseEntity<Map<String,String>>
+  }
+}
+
+package "com.atm.iso8583.simulator" {
+  class Iso8583MockSwitch <<Runnable>> {
+    + main(args: String[]): void
+    + run(): void
+  }
+}
+
+package "com.atm.iso8583.iso" {
+  enum IsoField {
+    RESPONSE_CODE = 39
+  }
+  class IsoMtiUtil {
+    {static} + toResponseMti(requestMti: String): String
+  }
+}
+
+class ISOMsg
+class GenericPackager
+class ASCIIChannel
+class ResponseEntity
+class Map
+
+Iso8583Controller --> Iso8583GatewayService
+Iso8583GatewayService --> Iso8583Codec
+Iso8583GatewayService --> Iso8583Channel
+
+Iso8583Codec ..> GenericPackager
+Iso8583Channel ..> ASCIIChannel
+Iso8583Codec ..> ISOMsg
+Iso8583Channel ..> ISOMsg
+Iso8583MockSwitch ..> ISOMsg
+
+Iso8583Codec ..> Iso8583Exception
+Iso8583Channel ..> Iso8583Exception
+GlobalExceptionHandler ..> Iso8583Exception
+
+Iso8583Codec ..> IsoField
+Iso8583MockSwitch ..> IsoField
+Iso8583MockSwitch ..> IsoMtiUtil
+
+@enduml
+

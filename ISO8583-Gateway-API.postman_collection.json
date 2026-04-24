@@ -107,6 +107,105 @@
 						"description": "Purchase transaction (MTI 0200) - Amount: 250.00 MAD"
 					},
 					"response": []
+				},
+				{
+					"name": "Presentment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "REQ-PRES-{{$randomUUID}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"0200\",\n  \"transactionRef\": \"TXN-PRES-{{$timestamp}}\",\n  \"fields\": {\n    \"2\": \"4111111111111111\",\n    \"3\": \"000000\",\n    \"4\": \"000000015000\",\n    \"7\": \"{{$timestamp}}\",\n    \"11\": \"{{$randomInt}}\",\n    \"12\": \"103045\",\n    \"13\": \"0312\",\n    \"37\": \"{{$randomInt}}\",\n    \"41\": \"POS00001\",\n    \"49\": \"504\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Presentment transaction (MTI 0200) - Amount: 150.00 MAD"
+					},
+					"response": []
+				},
+				{
+					"name": "Financial",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "REQ-FIN-{{$randomUUID}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"0200\",\n  \"transactionRef\": \"TXN-FIN-{{$timestamp}}\",\n  \"fields\": {\n    \"2\": \"5500000000000004\",\n    \"3\": \"000000\",\n    \"4\": \"000000005000\",\n    \"7\": \"{{$timestamp}}\",\n    \"11\": \"{{$randomInt}}\",\n    \"12\": \"103050\",\n    \"13\": \"0312\",\n    \"37\": \"{{$randomInt}}\",\n    \"41\": \"ATM00001\",\n    \"49\": \"504\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Financial transaction (MTI 0200) - Amount: 50.00 MAD"
+					},
+					"response": []
+				},
+				{
+					"name": "Reversal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "REQ-REV-{{$randomUUID}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"0400\",\n  \"transactionRef\": \"TXN-REV-{{$timestamp}}\",\n  \"fields\": {\n    \"2\": \"5500000000000004\",\n    \"3\": \"000000\",\n    \"4\": \"000000010000\",\n    \"7\": \"{{$timestamp}}\",\n    \"11\": \"{{$randomInt}}\",\n    \"12\": \"103050\",\n    \"13\": \"0312\",\n    \"37\": \"{{$randomInt}}\",\n    \"41\": \"ATM00001\",\n    \"49\": \"504\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Reversal transaction (MTI 0400) - Amount: 100.00 MAD"
+					},
+					"response": []
 				}
 			],
 			"description": "ISO 8583 transaction endpoints"
@@ -248,6 +347,270 @@
 							]
 						},
 						"description": "Test validation error with missing fields - Expected: 400 Bad Request"
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Card Number",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "REQ-ERR-{{$randomUUID}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"0200\",\n  \"transactionRef\": \"TXN-ERR-{{$timestamp}}\",\n  \"fields\": {\n    \"2\": \"1234567890123456\",\n    \"3\": \"000000\",\n    \"4\": \"000000010000\",\n    \"7\": \"{{$timestamp}}\",\n    \"11\": \"{{$randomInt}}\",\n    \"12\": \"103045\",\n    \"13\": \"0312\",\n    \"41\": \"ATM00001\",\n    \"49\": \"504\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Test invalid card number (PAN) - Expected response code: 14"
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Processing Code",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "REQ-ERR-{{$randomUUID}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"0200\",\n  \"transactionRef\": \"TXN-ERR-{{$timestamp}}\",\n  \"fields\": {\n    \"2\": \"4111111111111111\",\n    \"3\": \"999999\",\n    \"4\": \"000000010000\",\n    \"7\": \"{{$timestamp}}\",\n    \"11\": \"{{$randomInt}}\",\n    \"12\": \"103045\",\n    \"13\": \"0312\",\n    \"41\": \"ATM00001\",\n    \"49\": \"504\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Test invalid processing code - Expected response code: 25"
+					},
+					"response": []
+				},
+				{
+					"name": "Expired Card",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "REQ-ERR-{{$randomUUID}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"0200\",\n  \"transactionRef\": \"TXN-ERR-{{$timestamp}}\",\n  \"fields\": {\n    \"2\": \"4111111111111111\",\n    \"3\": \"000000\",\n    \"4\": \"000000010000\",\n    \"7\": \"{{$timestamp}}\",\n    \"11\": \"{{$randomInt}}\",\n    \"12\": \"103045\",\n    \"13\": \"1201\",\n    \"41\": \"ATM00001\",\n    \"49\": \"504\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Test expired card scenario - Expected response code: 54"
+					},
+					"response": []
+				},
+				{
+					"name": "PIN Error",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "REQ-ERR-{{$randomUUID}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"0200\",\n  \"transactionRef\": \"TXN-ERR-{{$timestamp}}\",\n  \"fields\": {\n    \"2\": \"5500000000000004\",\n    \"3\": \"000000\",\n    \"4\": \"000000010000\",\n    \"7\": \"{{$timestamp}}\",\n    \"11\": \"{{$randomInt}}\",\n    \"12\": \"103050\",\n    \"13\": \"0312\",\n    \"26\": \"12\",\n    \"41\": \"ATM00001\",\n    \"49\": \"504\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Test PIN error scenario - Expected response code: 55"
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Amount",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "REQ-ERR-{{$randomUUID}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"0200\",\n  \"transactionRef\": \"TXN-ERR-{{$timestamp}}\",\n  \"fields\": {\n    \"2\": \"4111111111111111\",\n    \"3\": \"000000\",\n    \"4\": \"000000000001\",\n    \"7\": \"{{$timestamp}}\",\n    \"11\": \"{{$randomInt}}\",\n    \"12\": \"103045\",\n    \"13\": \"0312\",\n    \"41\": \"ATM00001\",\n    \"49\": \"504\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Test invalid amount (below minimum) - Expected response code: 13"
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Terminal ID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "REQ-ERR-{{$randomUUID}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"0200\",\n  \"transactionRef\": \"TXN-ERR-{{$timestamp}}\",\n  \"fields\": {\n    \"2\": \"4111111111111111\",\n    \"3\": \"000000\",\n    \"4\": \"000000010000\",\n    \"7\": \"{{$timestamp}}\",\n    \"11\": \"{{$randomInt}}\",\n    \"12\": \"103045\",\n    \"13\": \"0312\",\n    \"41\": \"INVALID\",\n    \"49\": \"504\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Test invalid terminal ID - Expected response code: 41"
+					},
+					"response": []
+				},
+				{
+					"name": "Service Not Available",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "REQ-ERR-{{$randomUUID}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"0200\",\n  \"transactionRef\": \"TXN-ERR-{{$timestamp}}\",\n  \"fields\": {\n    \"2\": \"4111111111111111\",\n    \"3\": \"000000\",\n    \"4\": \"000000010000\",\n    \"7\": \"{{$timestamp}}\",\n    \"11\": \"{{$randomInt}}\",\n    \"12\": \"103045\",\n    \"13\": \"0312\",\n    \"41\": \"ATM00001\",\n    \"49\": \"504\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Test service not available scenario - Expected response code: 91"
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Currency Code",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "REQ-ERR-{{$randomUUID}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mti\": \"0200\",\n  \"transactionRef\": \"TXN-ERR-{{$timestamp}}\",\n  \"fields\": {\n    \"2\": \"4111111111111111\",\n    \"3\": \"000000\",\n    \"4\": \"000000010000\",\n    \"7\": \"{{$timestamp}}\",\n    \"11\": \"{{$randomInt}}\",\n    \"12\": \"103045\",\n    \"13\": \"0312\",\n    \"41\": \"ATM00001\",\n    \"49\": \"999\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/iso8583/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"iso8583",
+								"send"
+							]
+						},
+						"description": "Test invalid currency code - Expected response code: 58"
 					},
 					"response": []
 				}
